@@ -83,7 +83,36 @@ body{
     color: rgb(7, 151, 2);
 }
 
+.cor-letra-titulo{
+    color: #800000;
+}
+
+.cor-letra-laranja{
+    color: darkorange;
+}
+
+.cor-letra-vermelho{
+    color: red;
+}
+
+.cor-letra-preto{
+    color: black;
+}
+
+.linha-vertical {
+    height: 100px;/*Altura da linha*/
+    border-left: 2px solid;/* Adiciona borda esquerda na div como ser fosse uma linha.*/
+  }
+
 .valores{
+    margin-top: 10%;
+}
+
+.div-botao-comprar{
+    margin-top: 12%;
+}
+
+.espaco-2{
     margin-top: 2%;
 }
 
@@ -138,6 +167,10 @@ form{
 }
 #oculto{
     display: none;
+}
+
+.info-pagamento{
+    width: 50% !important;
 }
 
 /*ACESSO PAGINA SISTEMA/INDEX*/
@@ -228,10 +261,6 @@ form{
         width: 100%;
         height: 50%;
     }
-    /*    
-        button{
-            height: 300%;
-        }*/
 
     /*ALTERACOES DA TELA DE CADASTRO DO PARCEIRO DE NEGOCIO*/
     .formularioCadastroPn{
@@ -251,6 +280,11 @@ form{
     
     .logoff{
         display: none;
+    }
+
+    .div-botao-comprar{
+        margin-top: 10%;
+        
     }
 }
 
