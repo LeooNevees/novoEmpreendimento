@@ -95,6 +95,18 @@ body{
     color: red;
 }
 
+.cor-letra-ouro{
+    color: goldenrod;
+}
+
+.cor-letra-prata{
+    color: rgb(161, 159, 159);
+}
+
+.cor-letra-bronze{
+    color: rgb(173, 75, 4);
+}
+
 .cor-letra-preto{
     color: black;
 }
@@ -241,6 +253,11 @@ form{
 
 .fa-angle-left{
     margin-left: -2000%;
+}
+
+.scrollspySite{
+    overflow: auto;
+    height: 200px;
 }
 
 @media only screen and (max-width : 1000px){

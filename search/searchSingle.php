@@ -1,5 +1,7 @@
 <?php
+$produto = isset($_GET) ? filter_input(INPUT_GET, 'product', FILTER_SANITIZE_STRING) : '';
 include __DIR__ . '/../sistema.php';
+include __DIR__.'/../classes/Sale.php';
 ?>
 
 <html>
@@ -17,6 +19,10 @@ include __DIR__ . '/../sistema.php';
     if (!(include __DIR__ . '/../navbar.php')) {
         echo 'Erro ao carregar o Navbar';
     }
+
+    $classeSale = new Sale;
+    $retorno = $classeSale->gerarEstrutura($produto);
+
     ?>
     <br>
     <div class="container">
@@ -128,8 +134,7 @@ include __DIR__ . '/../sistema.php';
                         <i class="cor-letra-laranja fas fa-star"></i>
                         <i class="cor-letra-laranja fas fa-star-half-alt"></i>
                         <i class="cor-letra-laranja far fa-star"></i>
-                        <div class="accordion" id="accordionPanelsStayOpenExample">
-
+                        <div class="accordion scrollspySite" id="accordionPanelsStayOpenExample">
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
@@ -169,50 +174,51 @@ include __DIR__ . '/../sistema.php';
                                     </div>
                                 </div>
                             </div>
-
-                            <nav id="navbar-example2" class="navbar navbar-light bg-light px-3">
-                                <a class="navbar-brand" href="#">Navbar</a>
-                                <ul class="nav nav-pills">
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#scrollspyHeading1">First</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="#scrollspyHeading2">Second</a>
-                                    </li>
-                                    <li class="nav-item dropdown">
-                                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Dropdown</a>
-                                        <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="#scrollspyHeading3">Third</a></li>
-                                            <li><a class="dropdown-item" href="#scrollspyHeading4">Fourth</a></li>
-                                            <li>
-                                                <hr class="dropdown-divider">
-                                            </li>
-                                            <li><a class="dropdown-item" href="#scrollspyHeading5">Fifth</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </nav>
-                            <div data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-offset="0" class="scrollspy-example" tabindex="0">
-                                <h4 id="scrollspyHeading1">First heading</h4>
-                                <p>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.</p>
-                                <h4 id="scrollspyHeading2">Second heading</h4>
-                                <p>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.</p>
-                                <h4 id="scrollspyHeading3">Third heading</h4>
-                                <p>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.</p>
-                                <h4 id="scrollspyHeading4">Fourth heading</h4>
-                                <p>...</p>
-                                <h4 id="scrollspyHeading5">Fifth heading</h4>
-                                <p>...</p>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="panelsStayOpen-heading4">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse4" aria-expanded="false" aria-controls="panelsStayOpen-collapse4">
+                                        Problema na entrega
+                                    </button>
+                                </h2>
+                                <div id="panelsStayOpen-collapse4" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading4">
+                                    <div class="accordion-body">
+                                        <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                                    </div>
+                                </div>
                             </div>
-
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="panelsStayOpen-heading4">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse4" aria-expanded="false" aria-controls="panelsStayOpen-collapse4">
+                                        Problema na entrega
+                                    </button>
+                                </h2>
+                                <div id="panelsStayOpen-collapse4" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading4">
+                                    <div class="accordion-body">
+                                        <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="panelsStayOpen-heading4">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse4" aria-expanded="false" aria-controls="panelsStayOpen-collapse4">
+                                        Problema na entrega
+                                    </button>
+                                </h2>
+                                <div id="panelsStayOpen-collapse4" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading4">
+                                    <div class="accordion-body">
+                                        <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col col-lg-6">
-                <div class='card shadow-sm'>
-                    <div class='card-footer text-muted text-left'>
+                <div class='card shadow-sm' style="height:100%;">
+                    <div class='card-footer text-muted text-left' style="height:100%;">
                         <h2 class="cor-letra-titulo text-center">Dados sobre o vendedor</h2><br>
+                        <h4 class="cor-letra-ouro text-center"><i class="fas fa-medal"></i> Leonardo Neves - Ouro</h4><br>
                         <div>
                             <table class="table table-borderless text-center">
                                 <thead>
@@ -234,7 +240,7 @@ include __DIR__ . '/../sistema.php';
                     </div>
                 </div>
             </div>
-        </div>
+        </div><br>
     </div>
 </body><br>
 
