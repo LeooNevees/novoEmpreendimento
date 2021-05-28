@@ -336,10 +336,17 @@ class Sale{
 
 					$contador++;
 				}
-
 				$opinioes = implode("\n", $arrayOpinioes);
 
-				// $retornoVendedor = $this->avaliacaoVendedor($registro);
+				$retVendedor = $this->buscarVendedor($registros->id_vendedor);
+				$nomeVendedor = ucwords(mb_strtolower($retVendedor['nome']));
+				$vendas = isset($retVendedor['vendas']) ? $retVendedor['vendas'] : 'Sem Vendas';
+				$classificacao = isset($retVendedor['classificacao']) ? mb_strtolower($retVendedor['classificacao']) : 'bronze';
+				$titulo = ucfirst($classificacao);
+				$detalheEntrega = isset($retVendedor['detalheEntrega']) ? $retVendedor['detalheEntrega'] : 'Sem entregas';
+				$classeEntrega = isset($retVendedor['classeEntrega']) ? $retVendedor['classeEntrega'] : '';
+				$detalheAtendimento = isset($retVendedor['detalheAtendimento']) ? $retVendedor['detalheAtendimento'] : 'Sem atendimentos';
+				$classeAtendimento = isset($retVendedor['classeAtendimento']) ? $retVendedor['classeAtendimento'] : '';				
 
 				$array[] = "<div class='row row-cols-1 row-cols-lg-2'>"
 					."<div class='col col-lg-6'>"
@@ -358,21 +365,21 @@ class Sale{
 						."<div class='card shadow-sm' style='height:100%;'>"
 							."<div class='card-footer text-muted text-left' style='height:100%;'>"
 								."<h2 class='cor-letra-titulo text-center'>Dados sobre o vendedor</h2><br>"
-								."<h4 class='cor-letra-ouro text-center'><i class='fas fa-medal'></i> Leonardo Neves - Ouro</h4><br>"
+								."<h4 class='cor-letra-$classificacao text-center'><i class='fas fa-medal'></i> $nomeVendedor - $titulo</h4><br>"
 								."<div>"
 									."<table class='table table-borderless text-center'>"
 										."<thead>"
 											."<tr>"
 												."<th class='col-4'><i class='fas fa-shopping-bag fa-2x'></i></th>"
-												."<th class='col-4'><i class='cor-letra-vermelho fas fa-truck fa-2x'></i></th>"
-												."<th class='col-4'><i class='cor-letra-promocao far fa-comment-dots fa-2x'></i></th>"
+												."<th class='col-4'><i class='$classeEntrega fas fa-truck fa-2x'></i></th>"
+												."<th class='col-4'><i class='$classeAtendimento far fa-comment-dots fa-2x'></i></th>"
 											."</tr>"
 										."</thead>"
 										."<tbody>"
 											."<tr>"
-												."<td>625 Vendas</td>"
-												."<td>Entrega dos produsos dentro do prazo (Ruim)</td>"
-												."<td>Presta bom atendimento (Bom)</td>"
+												."<td>$vendas</td>"
+												."<td>$detalheEntrega</td>"
+												."<td>$detalheAtendimento</td>"
 											."</tr>"
 										."</tbody>"
 									."</table>"
@@ -388,48 +395,81 @@ class Sale{
 		}
 	}
 
-	// private function avaliacaoVendedor($dados){
-	// 	try {
-	// 		$id = $dados->id_vendedor;
-	// 		$retornoVendedor = $this->buscarVendedor($id);
-	// 		if($retornoVendedor === false || !count($retornoVendedor)){
-	// 			throw new Exception('Erro ao buscar o vendedor '.$id);
-	// 		}
-			
-	// 		$qtdeVendas = isset($retornoVendedor->vendas) ? $retornoVendedor->vendas : 0;
-	// 		$auxOpin
-	// 		$array = [];
-	// 		foreach ($retornoVendedor as $valores) {
-	// 			$array[] = 
-	// 		}
-
-	// 		return $array;
-
-	// 	} catch (Exception $ex) {
-	// 		$this->mensagem = $ex->getMessage();
-	// 		return false;
-	// 	}
-	// }
-
 	private function buscarVendedor($id){
 		try {
+			if(empty($id)){
+				throw new Exception('Parâmetros para Buscar Vendedor inválidos');
+			}
+
 			$requisicao = array(
-				'tabela' => 'parceiroNegocio',
+				'tabela' => 'relacaoParceiroNegocio',
 				'acao' => 'pesquisar',
 				'dados' => array(
-					'id_vendedor' => $id
+					'id_parceiro' => $id
 				)
 			);
+			$conexao = new Xmongo;
 			$retorno = $conexao->requisitar($requisicao);
 			if ($retorno === false) {
 				throw new Exception($conexao->getMensagem());
 			}
 
-			if ($conexao->getEncontrados() < 1) {
-				throw new Exception('Nenhum registro encontrado');
+			$auxVendedor = json_decode($conexao->getMensagem());
+			if(!count((array) $auxVendedor)){
+				$newRequisicao = array(
+					'tabela' => 'parceiroNegocio',
+					'acao' => 'pesquisar',
+					'dados' => array(
+						'_id' => new MongoDB\BSON\ObjectID($id)
+					)
+				);
+				$newConexao = new Xmongo;
+				$newRetorno = $conexao->requisitar($newRequisicao);
+				if ($newRetorno === false) {
+					throw new Exception($conexao->getMensagem());
+				}
+				$ret = json_decode($newRetorno);
+				$pn = $ret[0];
+				$arrayRetorno = array(
+					'nome' => isset($pn->nome_fantasia) && !empty($pn->nome_fantasia) ? $pn->nome_fantasia : $pn->nome_completo
+				);
+				return $arrayRetorno;
+			}
+			$avalVendas = $auxVendedor[0];
+			$classeEntrega = 'cor-letra-vermelho';
+			$detalheEntrega = 'Não costuma entregar os produtos dentro do prazo';
+			if($avalVendas->media_entrega >= 3){
+				$classeEntrega = 'cor-letra-laranja';
+				$detalheEntrega = 'Entrega parcialmente seus produtos dentro do prazo';
+			}
+			if($avalVendas->media_entrega >= 4){
+				$classeEntrega = 'cor-letra-promocao';
+				$detalheEntrega = 'Sempre entrega seus produtos dentro do prazo';
 			}
 
-			return $conexao->getMensagem();
+			$classeAtendimento = 'cor-letra-vermelho';
+			$detalheAtendimento = 'Péssimo atendimento';
+			if($avalVendas->media_atendimento >= 3){
+				$classeAtendimento = 'cor-letra-laranja';
+				$detalheAtendimento = 'Atendimento mediano';
+			}
+			if($avalVendas->media_atendimento >= 4){
+				$classeAtendimento = 'cor-letra-promocao';
+				$detalheAtendimento = 'Ótimo atendimento';
+			}
+
+
+			$arrayRetorno = array(
+				'nome' => isset($avalVendas->nome_fantasia) && !empty($avalVendas->nome_fantasia) ? $avalVendas->nome_fantasia : $avalVendas->nome_completo,
+				'classificacao' => $avalVendas->classificacao,
+				'vendas' => $avalVendas->vendas > 1 ? $avalVendas->vendas.' Vendas' : $avalVendas->vendas.' Venda',
+				'detalheEntrega' => $detalheEntrega,
+				'classeEntrega' => $classeEntrega,
+				'detalheAtendimento' => $detalheAtendimento,
+				'classeAtendimento' => $classeAtendimento
+			);
+
+			return $arrayRetorno;
 		} catch (Exception $ex) {
 			$this->mensagem = $ex->getMessage();
 			return false;
