@@ -5,7 +5,7 @@ if (!isset($_SESSION)) {
 }
 
 /**
- * Classe para a validação do usuário informado
+ * Classe para a validaï¿½ï¿½o do usuï¿½rio informado
  *
  * @author leoneves
  */
@@ -31,11 +31,11 @@ class Login {
             $senha = trim($this->getSenha());
 
             if (empty($login) || trim($login) == '') {
-                throw new Exception('Necessário informar o Login');
+                throw new Exception('Necessï¿½rio informar o Login');
             }
 
             if (empty($senha) || trim($senha) == '') {
-                throw new Exception('Necessário informar a Senha');
+                throw new Exception('Necessï¿½rio informar a Senha');
             }
 
             $this->setLogin($login);
@@ -67,7 +67,7 @@ class Login {
             }
 
             if ($conexao->getEncontrados() < 1) {
-                throw new Exception('Usuário não encontrado');
+                throw new Exception('Usuï¿½rio nï¿½o encontrado');
             }
 
             $this->setEncontrados($conexao->getEncontrados());
@@ -79,7 +79,7 @@ class Login {
 
             foreach ($array as $registros) {
                 if (empty($string->$registros) || trim($string->$registros) == '') {
-                    throw new Exception(ucfirst($registros) . 'não informado no retorno do banco');
+                    throw new Exception(ucfirst($registros) . 'nï¿½o informado no retorno do banco');
                 }
                 $set = 'set' . ucfirst($registros);
                 $this->$set($string->$registros);
@@ -99,7 +99,7 @@ class Login {
             foreach ($array as $registros) {
                 $get = 'get' . ucfirst($registros);
                 if (empty($this->$get()) || trim($this->$get()) == '') {
-                    throw new Exception(ucfirst($registros) . ' não informado');
+                    throw new Exception(ucfirst($registros) . ' nï¿½o informado');
                 }
             }
 
@@ -135,7 +135,7 @@ class Login {
             }
 
             if ($this->getSituacao() != 'A') {
-                throw new Exception('Usuário inativo');
+                throw new Exception('UsuÃ¡rio inativo');
             }
 
             $retornoSession = $this->DadosSession();
@@ -144,7 +144,7 @@ class Login {
                 throw new Exception($this->getMensagem());
             }
 
-            $this->setMensagem('Usuário com permissão');
+            $this->setMensagem('UsuÃ¡rio com permissÃ£o');
 
             return true;
         } catch (Exception $ex) {
@@ -178,7 +178,7 @@ class Login {
                 $retorno = 'NAO EXISTE';
             }
             $this->setMensagem($retorno);
-            
+            return true;            
         } catch (Exception $ex) {
             $this->setMensagem($ex->getMessage());
             return false;
@@ -196,7 +196,7 @@ class Login {
             $sessao = $this->getMensagem();
 
             if ($sessao == 'INATIVO') {
-                throw new Exception('Sessão já inativada');
+                throw new Exception('Sessï¿½o jï¿½ inativada');
             }
 
             session_destroy();
