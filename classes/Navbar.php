@@ -1,6 +1,5 @@
 <?php
-
-include '/var/www/html/novoEmpreendimento/classes/Xmongo.php';
+include_once '/var/www/html/novoEmpreendimento/classes/repository/FunctionRepository.php';
 
 /**
  * Classe criada para controlar e manusear o Navbar disponibilizado durante o acesso ao sistema
@@ -17,12 +16,12 @@ class Navbar {
     private function valida($array) {
         try {
             if (empty($array)) {
-                throw new Exception('Id Função ou Id Módulo não fornecido');
+                throw new Exception('Id FunÃ§Ã£o ou Id MÃ³dulo nÃ£o fornecido');
             }
 
             foreach ($array as $key => $value) {
                 if (!is_numeric($value) || $value == 0) {
-                    throw new Exception('Id ' . $key . ' inválido. Por favor contate um administrador');
+                    throw new Exception('Id ' . $key . ' invÃ¡lido. Por favor contate um administrador');
                 }
                 $set = 'set' . ucfirst($key);
                 $this->$set($value);
@@ -50,25 +49,20 @@ class Navbar {
             }
 
             $requisicao = array(
-                'tabela' => 'funcao',
-                'acao' => 'pesquisar',
-                'dados' => array(
-                    'id' => $this->getFuncao()
-                )
+                'id' => $this->getFuncao()
             );
-            
-            $conexao = new Xmongo();
-            $retorno = $conexao->requisitar($requisicao);
+            $repository = new FunctionRepository;
+            $retorno = $repository->getFunction($requisicao);
             if ($retorno === false) {
-                throw new Exception($conexao->getMensagem());
+                throw new Exception($repository->mensagem);
             }
-            if ($conexao->getEncontrados() < 1) {
-                throw new Exception('Função não encontrada');
+            if ($repository->encontrados < 1) {
+                throw new Exception('FunÃ§Ã£o nÃ£o encontrada');
             }
 
-            $this->setEncontrados($conexao->getEncontrados());
+            $this->setEncontrados($repository->encontrados);
 
-            $retornoDecod = json_decode($conexao->getMensagem());
+            $retornoDecod = json_decode($retorno);
             $analise = $retornoDecod[0];
             $analiseAcesso = $analise->acesso;
 
@@ -111,7 +105,7 @@ class Navbar {
             }
 
             if ($conexao->getEncontrados() < 1) {
-                throw new Exception('Módulo não encontrado');
+                throw new Exception('MÃ³dulo nÃ£o encontrado');
             }
             
             $this->setEncontrados($conexao->getEncontrados());

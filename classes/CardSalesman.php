@@ -1,5 +1,5 @@
 <?php
-//include '/var/www/html/novoEmpreendimento/classes/Card.php';
+include_once '/var/www/html/novoEmpreendimento/classes/repository/BusinessPartnerRepository.php';
 /**
  * Classe para a criação de cards para os Vendedores
  *
@@ -18,28 +18,18 @@ class CardSalesman extends Card{
             if(!is_array($dados) || !is_numeric($limite)){
                 throw new Exception('Parâmetros inválidos');
             }
-            $conexao = new Xmongo();
-            $requisicao = array(
-                'tabela' => 'parceiroNegocio',
-                'acao' => 'pesquisar',
-                'limit' => $limite
-            );
-
-            if(count($dados) > 0){
-                $requisicao['dados'] = $dados;
-            }
-
-            $retorno = $conexao->requisitar($requisicao);
+            $repository = new BusinessPartnerRepository;
+            $retorno = $repository->getBusinessPartnerLimit($dados, $limite);
             if ($retorno === false) {
-                throw new Exception($conexao->getMensagem());
+                throw new Exception($repository->mensagem);
             }
 
-            if($conexao->getEncontrados() < 1){
+            if($repository->encontrados < 1){
                 throw new Exception('Nenhum registro encontrado');
             }
             
-            $this->setMensagem($conexao->getMensagem());
-            $this->setEncontrados($conexao->getEncontrados());
+            $this->setMensagem($retorno);
+            $this->setEncontrados($repository->encontrados);
             
             return true;
         } catch (Exception $ex) {

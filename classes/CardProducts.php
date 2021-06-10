@@ -1,5 +1,4 @@
 <?php
-//include '/var/www/html/novoEmpreendimento/classes/Card.php';
 /**
  * Classe para a criação de cards para os produtos
  *
@@ -12,42 +11,6 @@ class CardProducts extends Card{
         $this->setTitulo($titulo);
     }
     
-    // ARRAY $dados = Informações que pretende buscar no banco de dados
-    protected function buscarDados($dados = [], $limite = 3){
-        try {
-            if(!is_array($dados) || !is_numeric($limite)){
-                throw new Exception('Parâmetros inválidos');
-            }
-            $conexao = new Xmongo();
-            $requisicao = array(
-                'tabela' => 'produtos',
-                'acao' => 'pesquisar',
-                'limit' => $limite
-            );
-
-            if(count($dados) > 0){
-                $requisicao['dados'] = $dados;
-            }
-
-            $retorno = $conexao->requisitar($requisicao);
-            if ($retorno === false) {
-                throw new Exception($conexao->getMensagem());
-            }
-
-            if($conexao->getEncontrados() < 1){
-                throw new Exception('Nenhum registro encontrado');
-            }
-            
-            $this->setMensagem($conexao->getMensagem());
-            $this->setEncontrados($conexao->getEncontrados());
-            
-            return true;
-        } catch (Exception $ex) {
-            $this->setMensagem($ex->getMessage());
-            return false;
-        }
-    }
-
     protected function gerarDadosEstrutura(){
         try {
             if(!is_string($this->getMensagem())){

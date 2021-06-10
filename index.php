@@ -2,7 +2,7 @@
     <head>
         <title>Ipeças - Faça seu pedido</title>
         <!--JS-->
-        <script src="../js/sistema.js" type="text/javascript"></script>
+        <script src="/novoEmpreendimento/js/sistema.js" type="text/javascript"></script>
     </head>
     <body>
         <?php

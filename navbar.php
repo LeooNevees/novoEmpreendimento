@@ -1,6 +1,6 @@
 <?php
-include '/var/www/html/novoEmpreendimento/classes/Navbar.php';
-include '/var/www/html/novoEmpreendimento/classes/Login.php';
+include_once '/var/www/html/novoEmpreendimento/classes/Navbar.php';
+include_once '/var/www/html/novoEmpreendimento/classes/Login.php';
 ?>
 
 <link href="/novoEmpreendimento/css/style.css" rel="stylesheet" type="text/css"/>

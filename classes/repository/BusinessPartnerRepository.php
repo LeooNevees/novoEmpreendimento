@@ -6,7 +6,7 @@ include_once '/var/www/html/novoEmpreendimento/classes/Xmongo.php';
  *
  * @author leoneves
  */
-class ProductsRepository{
+class BusinessPartnerRepository{
     public $encontrados = 0;
     public $mensagem;
 
@@ -14,17 +14,18 @@ class ProductsRepository{
         $this->conexao = new Xmongo();
     }
 
-    public function getProduct($idProduto){
+    /**
+     * $dados = Array (ex: '_id' => new MongoDB\BSON\ObjectID($idProduto))
+     */
+    public function getBusinessPartner($dados){
         try {
-            if(empty($idProduto)){
+            if(empty($dados) || !count($dados)){
                 throw new Exception('Parâmetros inválidos');
             }
             $requisicao = array(
-                'tabela' => 'produtos',
+                'tabela' => 'parceiroNegocio',
                 'acao' => 'pesquisar',
-                'dados' => array(
-                    '_id' => new MongoDB\BSON\ObjectID($idProduto)
-                )
+                'dados' => $dados
             );
     
             $retorno = $this->conexao->requisitar($requisicao);
@@ -46,10 +47,10 @@ class ProductsRepository{
      * $limit String 
      * return Object || Boolean 
      */
-    public function getProductLimit($dados = '', $limit = ''){
+    public function getBusinessPartnerLimit($dados = '', $limit = ''){
         try {
             $requisicao = array(
-                'tabela' => 'produtos',
+                'tabela' => 'parceiroNegocio',
                 'acao' => 'pesquisar',
             );
 

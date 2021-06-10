@@ -1,5 +1,5 @@
 <?php
-require_once '/var/www/html/novoEmpreendimento/vendor/autoload.php';
+include_once '/var/www/html/novoEmpreendimento/vendor/autoload.php';
 /**
  * Description of xmongo
  * Realiza a conexao com o banco de dados Mongo

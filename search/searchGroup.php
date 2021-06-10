@@ -1,6 +1,7 @@
 <?php
 include __DIR__ . '/../sistema.php';
-include '/var/www/html/novoEmpreendimento/classes/Card.php';
+include_once '/var/www/html/novoEmpreendimento/classes/Card.php';
+include_once '/var/www/html/novoEmpreendimento/classes/repository/GroupsRepository.php';
 $pesquisa = isset($_GET['pesq']) ? mb_strtoupper(filter_input(INPUT_GET, 'pesq', FILTER_SANITIZE_STRING)) : '';
 ?>
 
@@ -21,29 +22,24 @@ $pesquisa = isset($_GET['pesq']) ? mb_strtoupper(filter_input(INPUT_GET, 'pesq',
                 throw new Exception('Erro ao carregar o NavBar');
             }
 
-            $dados = ['status' => 'ATIVO'];
-
             if (!empty($pesquisa)) {
-                $conexao = new Xmongo;
-                $requisicao = array(
-                    'tabela' => 'grupos',
-                    'acao' => 'pesquisar',
-                    'dados' => ['nome' => $pesquisa]
-                );
-                $retorno = $conexao->requisitar($requisicao);
+                $dados = ['nome' => $pesquisa];
+                $repository = new GroupsRepository;
+                $retorno = $repository->getGroups($dados);
                 if ($retorno === false) {
-                    throw new Exception($conexao->getMensagem());
+                    throw new Exception($repository->mensagem);
                 }
 
-                if ($conexao->getEncontrados() < 1) {
+                if ($repository->encontrados < 1) {
                     throw new Exception('Nenhum Grupo com o nome ' . $pequisa . ' encontrado');
                 }
 
-                $resultado = json_decode($conexao->getMensagem());
+                $resultado = json_decode($retorno);
                 $id = $resultado[0]->id;
                 if (empty($id) || !is_numeric($id)) {
                     throw new Exception('Erro ao identificar o ID do grupo');
                 }
+                unset($dados);
                 $dados['grupo'] = $id;
             }
 

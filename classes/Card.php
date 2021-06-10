@@ -1,4 +1,5 @@
 <?php
+include_once '/var/www/html/novoEmpreendimento/classes/repository/ProductsRepository.php';
 /**
  * Classe para a base da criação de cards
  *
@@ -57,28 +58,18 @@ class Card {
             if(!is_array($dados) || !is_numeric($limite)){
                 throw new Exception('Parâmetros inválidos');
             }
-            $conexao = new Xmongo();
-            $requisicao = array(
-                'tabela' => 'produtos',
-                'acao' => 'pesquisar',
-                'limit' => $limite
-            );
-
-            if(count($dados) > 0){
-                $requisicao['dados'] = $dados;
-            }
-
-            $retorno = $conexao->requisitar($requisicao);
+            $repository = new ProductsRepository;
+            $retorno = $repository->getProductLimit($dados, $limite);
             if ($retorno === false) {
-                throw new Exception($conexao->getMensagem());
+                throw new Exception($repository->mensagem);
             }
 
-            if($conexao->getEncontrados() < 1){
+            if($repository->encontrados < 1){
                 throw new Exception('Nenhum registro encontrado');
             }
             
-            $this->setMensagem($conexao->getMensagem());
-            $this->setEncontrados($conexao->getEncontrados());
+            $this->setMensagem($retorno);
+            $this->setEncontrados($repository->encontrados);
             
             return true;
         } catch (Exception $ex) {

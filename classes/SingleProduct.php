@@ -1,4 +1,7 @@
 <?php
+include_once '/var/www/html/novoEmpreendimento/classes/repository/ProductsRepository.php';
+include_once '/var/www/html/novoEmpreendimento/classes/repository/RelationshipBusinessPartnerRepository.php';
+include_once '/var/www/html/novoEmpreendimento/classes/repository/BusinessPartnerRepository.php';
 /*
  * Classe para a base da Página de Vendas de cada item
  * OBS: A princípio foi criado para cada ROW(linha no css) uma function trazendo as informações específicas 
@@ -53,26 +56,17 @@ class SingleProduct{
 			if (empty($idProduto)) {
 				throw new Exception('Parâmetros inválidos');
 			}
-			$conexao = new Xmongo();
-
-			$requisicao = array(
-				'tabela' => 'produtos',
-				'acao' => 'pesquisar',
-				'dados' => array(
-					'_id' => new MongoDB\BSON\ObjectID($idProduto)
-				)
-			);
-
-			$retorno = $conexao->requisitar($requisicao);
+			$repository = new ProductsRepository;
+			$retorno = $repository->getProduct($idProduto);
 			if ($retorno === false) {
-				throw new Exception($conexao->getMensagem());
+				throw new Exception($repository->mensagem);
 			}
 
-			if ($conexao->getEncontrados() < 1) {
+			if ($repository->encontrados < 1) {
 				throw new Exception('Nenhum registro encontrado');
 			}
 
-			return $conexao->getMensagem();
+			return $retorno;
 		} catch (Exception $ex) {
 			$this->mensagem = $ex->getMessage();
 			return false;
@@ -191,7 +185,7 @@ class SingleProduct{
 									."</label>"
 								."</div>"
 								."<div class='input-group'>"
-									."<input type='number' class='form-control text-center' value='1' aria-label='Dollar amount (with dot and two decimal places)'>"
+									."<input type='number' class='form-control text-center' value='1' id='quantidade_compra' name='quantidade_compra' min='1'>"
 									."<span class='input-group-text'>$quantidadeEstoque Disponíveis</span>"
 								."</div>"
 								."<div class='d-grid gap-2 div-botao-comprar'>"
@@ -409,32 +403,21 @@ class SingleProduct{
 				throw new Exception('Parâmetros para Buscar Vendedor inválidos');
 			}
 
-			$requisicao = array(
-				'tabela' => 'relacaoParceiroNegocio',
-				'acao' => 'pesquisar',
-				'dados' => array(
-					'id_parceiro' => $id
-				)
-			);
-			$conexao = new Xmongo;
-			$retorno = $conexao->requisitar($requisicao);
+			$repository = new RelationshipBusinessPartnerRepository;
+			$dados = array('id_parceiro' => $id);
+
+			$retorno = $repository->getRelationBusiness($dados);
 			if ($retorno === false) {
-				throw new Exception($conexao->getMensagem());
+				throw new Exception($repository->mensagem);
 			}
 
-			$auxVendedor = json_decode($conexao->getMensagem());
+			$auxVendedor = json_decode($retorno);
 			if(!count((array) $auxVendedor)){
-				$newRequisicao = array(
-					'tabela' => 'parceiroNegocio',
-					'acao' => 'pesquisar',
-					'dados' => array(
-						'_id' => new MongoDB\BSON\ObjectID($id)
-					)
-				);
-				$newConexao = new Xmongo;
-				$newRetorno = $conexao->requisitar($newRequisicao);
+				$repoBusiness = new BusinessPartnerRepository;
+				$dadosBusiness = array('_id' => new MongoDB\BSON\ObjectID($id));
+				$newRetorno = $repoBusiness->getBusinessPartner($dadosBusiness);
 				if ($newRetorno === false) {
-					throw new Exception($conexao->getMensagem());
+					throw new Exception($repoBusiness->mensagem);
 				}
 				$ret = json_decode($newRetorno);
 				$pn = $ret[0];

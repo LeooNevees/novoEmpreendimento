@@ -1,6 +1,10 @@
 <?php
 include 'sistema.php';
 session_start();
+$teste = $_SERVER;
+if(isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], '/search/') == true){
+    $_SESSION['redirecionamento'] = $_SERVER['HTTP_REFERER'];
+}
 ?>
 <html>
     <head>

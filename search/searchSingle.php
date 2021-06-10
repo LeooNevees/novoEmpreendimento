@@ -11,6 +11,7 @@ include __DIR__.'/../classes/SingleProduct.php';
     <title>Ipeças - Faça seu pedido</title>
     <!-- JS -->
     <script src="/novoEmpreendimento/js/searchSale.js" type="text/javascript"></script>
+    <script src="/novoEmpreendimento/js/sistema.js" type="text/javascript"></script>
 
     <!-- CSS -->
     <link href="/novoEmpreendimento/css/product.css" rel="stylesheet">
