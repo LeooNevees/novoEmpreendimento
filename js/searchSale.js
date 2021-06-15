@@ -9,6 +9,10 @@ function efetuarCompra(idProduto) {
         return false;
     }
 
+    if(!confirm("Realmente deseja efetuar a Compra?")){
+        return false;
+    }
+
     $.ajax({
         url: '/novoEmpreendimento/sale/ajax_product_sale.php',
         type: 'post',
@@ -28,6 +32,7 @@ function efetuarCompra(idProduto) {
                 }
             }
             alert(resposta.mensagem);
+            window.location.reload();
         }
     })    
 }

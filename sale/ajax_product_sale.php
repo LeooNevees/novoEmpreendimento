@@ -20,7 +20,7 @@ try {
     
     $return = array(
         'status' => 0,
-        'mensagem' => utf8_encode('Tudo certo')
+        'mensagem' => utf8_encode('Compra Realizada com sucesso. Acompanhe o status da entrega na sua plataforma')
     );
     echo json_encode($return);
 } catch (Exception $ex) {

@@ -6,7 +6,7 @@ include_once '/var/www/html/novoEmpreendimento/classes/Xmongo.php';
  *
  * @author leoneves
  */
-class RelationshipBusinessPartnerRepository{
+class NegotiationRepository{
     public $encontrados = 0;
     public $mensagem;
 
@@ -16,17 +16,16 @@ class RelationshipBusinessPartnerRepository{
 
     /**
      * $dados Array
-     * $limit String 
      * return Object || Boolean 
      */
-    public function getRelationBusiness($dados){
+    public function getNegotiation(){
         try {
             if(empty($dados)){
-                throw new Exception('Parâmetros inválidos para a função getRelationBusiness');
+                throw new Exception('Parâmetros inválidos para a função getNegotiation');
             }
 
             $requisicao = array(
-                'tabela' => 'relacaoParceiroNegocio',
+                'tabela' => 'negociacao',
                 'acao' => 'pesquisar',
                 'dados' => $dados
             );
@@ -43,37 +42,33 @@ class RelationshipBusinessPartnerRepository{
             $this->mensagem = $ex->getMessage();
             return false;
         }
-    }
+    } 
 
     /**
-     * $id String
      * $dados Array
      * return Object || Boolean 
      */
-    public function updateRelationshipBusiness($id, $dados){
+    public function insertNegotiation($dados){
         try {
-            if(empty($id) || !count($dados)){
-                throw new Exception('Parâmetros inválidos na função Update Products');
+            if(empty($dados)){
+                throw new Exception('Parâmetros inválidos para a função insertNegotiation');
             }
+
             $requisicao = array(
-                'tabela' => 'relacaoParceiroNegocio',
-                'acao' => 'atualizar',
-                '_id' => array(
-                    'id_parceiro' => $id
-                ),
+                'tabela' => 'negociacao',
+                'acao' => 'cadastrar',
                 'dados' => $dados
             );
-
+    
             $retorno = $this->conexao->requisitar($requisicao);
             if ($retorno === false) {
                 throw new Exception($this->conexao->getMensagem());
             }
-            $this->afetados = $this->conexao->getAfetados();
-            $this->mensagem = $this->conexao->getMensagem();
-            return true;
+
+            return $this->conexao->getMensagem();
         } catch (Exception $ex) {
             $this->mensagem = $ex->getMessage();
             return false;
         }
-    }    
+    } 
 }

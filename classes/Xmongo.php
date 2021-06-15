@@ -93,6 +93,36 @@ class Xmongo {
                     $this->setAfetados(+1);
                     return true;
                     break;
+                case 'ATUALIZAR':
+                    if(isset($requisicao['_id'])){
+                        if(is_array($requisicao['_id'])){
+                            foreach ($requisicao['_id'] as $key => $value) {
+                                $keyId = $key;
+                                $valueId = $value;
+                            }
+                        }else{ 
+                            $keyId = '_id';
+                            $valueId = new MongoDB\BSON\ObjectID($requisicao['_id']);
+                        }
+                    }
+
+                    if (empty($filter) || empty($keyId) || empty($valueId)) {
+                        throw new Exception('Não possui parâmetros para atualizar');
+                    }
+
+                    $this->setAfetados(0);
+                    $cursor = $collection->updateOne(
+                        [$keyId => $valueId],
+                        ['$set' => $filter]
+                    );
+                    $resultado = $cursor->getModifiedCount();
+                    if (empty($resultado) || $resultado < 1) {
+                        throw new Exception('Erro ao atualizar a quantidade do produto. Por favor refaça o procedimento');
+                    }
+
+                    $this->setAfetados($resultado);
+                    return true;
+                    break;
                 default:
                     throw new Exception('Erro inesperado');
                     break;
