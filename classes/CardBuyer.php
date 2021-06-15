@@ -68,8 +68,8 @@ class CardBuyer extends Card{
                 $compras = isset($registros->compras) ? $registros->compras : '0';
                 
                 $array[] = "<div class='col'>"
-                                ."<div class='card shadow-sm' style='cursor:pointer;' $onclick>"
-                                    ."<img class='tamanho-imagem-card' src='$foto'>"
+                                ."<div class='card shadow-sm card-max' style='cursor:pointer;' $onclick>"
+                                    ."<img class='card-max' src='$foto'>"
                                     ."<div class='card-footer text-muted'>"
                                         ."<p class='card-text'>".$contador."ª Posição</p>"
                                         ."<p class='card-font-valor'>".$nomeCompleto."</p>"
