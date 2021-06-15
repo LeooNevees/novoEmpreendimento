@@ -1,8 +1,8 @@
 <?php
-include '/var/www/html/novoEmpreendimento/classes/Card.php';
-include '/var/www/html/novoEmpreendimento/classes/CardProducts.php';
-include '/var/www/html/novoEmpreendimento/classes/CardSalesman.php';
-include '/var/www/html/novoEmpreendimento/classes/CardBuyer.php';
+include_once '/var/www/html/novoEmpreendimento/classes/Card.php';
+include_once '/var/www/html/novoEmpreendimento/classes/CardProducts.php';
+include_once '/var/www/html/novoEmpreendimento/classes/CardSalesman.php';
+include_once '/var/www/html/novoEmpreendimento/classes/CardBuyer.php';
 
 try {
     $conteudo = [];

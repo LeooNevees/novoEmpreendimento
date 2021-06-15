@@ -1,5 +1,5 @@
 <?php
-require_once '/var/www/html/novoEmpreendimento/classes/Xmongo.php';
+// require_once '/var/www/html/novoEmpreendimento/classes/Xmongo.php';
 require_once 'classes/Login.php';
 
 try {
@@ -16,6 +16,7 @@ try {
 
     $mensagem = array(
         'status' => 'SUCESSO',
+        'redirecionamento' => isset($_SESSION['redirecionamento']) ? $_SESSION['redirecionamento'] : '/novoEmpreendimento/index.php',
         'mensagem' => utf8_encode($classeLogin->getMensagem())
     );
     $retornoMensagem = json_encode($mensagem);

@@ -1,6 +1,6 @@
 <?php
 
-require 'Xmongo.php';
+include_once 'Xmongo.php';
 
 /**
  * Classe criada para a gestao dos Parceiros de Negocios

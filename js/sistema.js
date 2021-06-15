@@ -51,32 +51,32 @@ function validarLogin() {
     }
     
     alternaBotao(true);
-    
     $.ajax({
         url: 'validarLogin.php',
-        type: 'post',
+        type: 'POST',
         data: {
             'usuario': usuario,
             'senha': senha
         },
         dataType: 'json',
-        success: function (resposta) {
-            var status = resposta.status;
-            var mensagem = resposta.mensagem;
-            if(status == 'SUCESSO'){
-                window.location.href = "/novoEmpreendimento/index.php";
-            }else{
-                window.location.href = "/novoEmpreendimento/login.php";
-            }
-            
+        async: false
+    }).done(function (resposta) {
+        console.log(resposta);
+        if(resposta.status == 'SUCESSO'){
+            window.location.href = resposta.redirecionamento;    
+        }else{
+            window.location.href = "/novoEmpreendimento/login.php";
         }
-    })
+    });
 }
 
+
+
 function confirmarLogout(){
-    if(confirm("Realmente deseja sair?")){
-        return true;
+    if(!confirm("Realmente deseja sair?")){
+        return false;
     }
-    return false;
+    return true;
 }
+
 

@@ -1,16 +1,18 @@
 <?php
+include_once '/var/www/html/novoEmpreendimento/classes/repository/BusinessPartnerRepository.php';
 
 if (!isset($_SESSION)) {
     session_start();
 }
 
 /**
- * Classe para a validação do usuário informado
+ * Classe para a validaÃ§Ã£o do usuÃ¡rio informado
  *
  * @author leoneves
  */
 class Login {
 
+    private $id;
     private $login;
     private $nome_completo;
     private $setor;
@@ -31,11 +33,11 @@ class Login {
             $senha = trim($this->getSenha());
 
             if (empty($login) || trim($login) == '') {
-                throw new Exception('Necessário informar o Login');
+                throw new Exception('NecessÃ¡rio informar o Login');
             }
 
             if (empty($senha) || trim($senha) == '') {
-                throw new Exception('Necessário informar a Senha');
+                throw new Exception('NecessÃ¡rio informar a Senha');
             }
 
             $this->setLogin($login);
@@ -50,36 +52,36 @@ class Login {
 
     private function validarAcessoBanco() {
         try {
-            $conexao = new Xmongo;
-            $requisicao = array(
-                'tabela' => 'parceiroNegocio',
-                'acao' => 'pesquisar',
-                'dados' => array(
-                    'login' => $this->getLogin(),
-                    'senha' => $this->getSenha()
-                )
+            $repository = new BusinessPartnerRepository;
+
+            $dados = array(
+                'login' => $this->getLogin(),
+                'senha' => $this->getSenha()
             );
+            $retornoAcesso = $repository->getBusinessPartner($dados);
 
-            $retUsuario = $conexao->requisitar($requisicao);
-
-            if ($retUsuario === false) {
-                throw new Exception($conexao->getMensagem());
+            if ($retornoAcesso === false) {
+                throw new Exception($repository->mensagem);
             }
 
-            if ($conexao->getEncontrados() < 1) {
-                throw new Exception('Usuário não encontrado');
+            if ($repository->encontrados < 1) {
+                throw new Exception('UsuÃ¡rio nÃ£o encontrado');
             }
-
-            $this->setEncontrados($conexao->getEncontrados());
-
-            $analiseRetorno = json_decode($conexao->getMensagem());
+            $this->encontrados = $repository->encontrados;
+            $analiseRetorno = json_decode($retornoAcesso);
             $string = $analiseRetorno[0];
 
-            $array = ['login', 'nome_completo', 'situacao', 'setor', 'funcao'];
+            $array = ['id', 'login', 'nome_completo', 'situacao', 'setor', 'funcao'];
 
             foreach ($array as $registros) {
-                if (empty($string->$registros) || trim($string->$registros) == '') {
-                    throw new Exception(ucfirst($registros) . 'não informado no retorno do banco');
+                if($registros == 'id'){
+                    $variavelId = $string->_id;
+                    foreach($variavelId as $value){
+                        $string->id = $value;
+                    }
+                }
+                if (empty($string->$registros) && $registros != 'id') {
+                    throw new Exception(ucfirst($registros) . 'nÃ£o informado no retorno do banco');
                 }
                 $set = 'set' . ucfirst($registros);
                 $this->$set($string->$registros);
@@ -94,20 +96,22 @@ class Login {
 
     private function DadosSession() {
         try {
-            $array = ['login', 'nome_completo', 'setor', 'funcao'];
+            $array = ['id', 'login', 'nome_completo', 'setor', 'funcao'];
 
             foreach ($array as $registros) {
                 $get = 'get' . ucfirst($registros);
                 if (empty($this->$get()) || trim($this->$get()) == '') {
-                    throw new Exception(ucfirst($registros) . ' não informado');
+                    throw new Exception(ucfirst($registros) . ' nÃ£o informado');
                 }
             }
 
             $_SESSION = array(
+                'id' => $this->getId(),
                 'login' => $this->getLogin(),
                 'nome' => $this->getNome_completo(),
                 'setor' => $this->getSetor(),
-                'funcao' => $this->getFuncao()
+                'funcao' => $this->getFuncao(),
+                'redirecionamento' => isset($_SESSION['redirecionamento']) ? $_SESSION['redirecionamento'] : '/novoEmpreendimento/index.php'
             );
 
             return true;
@@ -135,7 +139,7 @@ class Login {
             }
 
             if ($this->getSituacao() != 'A') {
-                throw new Exception('Usuário inativo');
+                throw new Exception('UsuÃ¡rio inativo');
             }
 
             $retornoSession = $this->DadosSession();
@@ -144,7 +148,7 @@ class Login {
                 throw new Exception($this->getMensagem());
             }
 
-            $this->setMensagem('Usuário com permissão');
+            $this->setMensagem('UsuÃ¡rio com permissÃ£o');
 
             return true;
         } catch (Exception $ex) {
@@ -178,7 +182,7 @@ class Login {
                 $retorno = 'NAO EXISTE';
             }
             $this->setMensagem($retorno);
-            
+            return true;            
         } catch (Exception $ex) {
             $this->setMensagem($ex->getMessage());
             return false;
@@ -196,7 +200,7 @@ class Login {
             $sessao = $this->getMensagem();
 
             if ($sessao == 'INATIVO') {
-                throw new Exception('Sessão já inativada');
+                throw new Exception('SessÃ£o jÃ¡ inativada');
             }
 
             session_destroy();
@@ -237,12 +241,16 @@ class Login {
         return $this->dispositivo;
     }
 
-    function getEncontrados() {
+    public function getEncontrados() {
         return $this->encontrados;
     }
 
-    function getMensagem() {
+    public function getMensagem() {
         return $this->mensagem;
+    }
+
+    private function getId(){
+        return $this->id;
     }
 
     private function setLogin($login) {
@@ -279,6 +287,10 @@ class Login {
 
     private function setMensagem($mensagem) {
         $this->mensagem = $mensagem;
+    }
+
+    private function setId($id){
+        $this->id = $id;
     }
 
 }

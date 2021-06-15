@@ -6,6 +6,9 @@
     display: none;
     background-color: rgba(79, 79, 79, .5);
 }
+.cor-body{
+    background-color: rgba(255, 255, 255, 0.719);
+}
 .loop{
     position: relative;
     left: 47%;
@@ -46,6 +49,14 @@ body{
     background-color: #800000;
 }
 
+.width-100{
+    width: 100%;
+}
+
+.height-100{
+    height: 100%;
+}
+
 .cor-letra{
     color: red;   
     text-decoration: none;
@@ -83,7 +94,48 @@ body{
     color: rgb(7, 151, 2);
 }
 
+.cor-letra-titulo{
+    color: #800000;
+}
+
+.cor-letra-laranja{
+    color: darkorange;
+}
+
+.cor-letra-vermelho{
+    color: red;
+}
+
+.cor-letra-ouro{
+    color: goldenrod;
+}
+
+.cor-letra-prata{
+    color: rgb(161, 159, 159);
+}
+
+.cor-letra-bronze{
+    color: rgb(173, 75, 4);
+}
+
+.cor-letra-preto{
+    color: black;
+}
+
+.linha-vertical {
+    height: 100px;/*Altura da linha*/
+    border-left: 2px solid;/* Adiciona borda esquerda na div como ser fosse uma linha.*/
+  }
+
 .valores{
+    margin-top: 10%;
+}
+
+.div-botao-comprar{
+    margin-top: 12%;
+}
+
+.espaco-2{
     margin-top: 2%;
 }
 
@@ -140,13 +192,17 @@ form{
     display: none;
 }
 
+.info-pagamento{
+    width: 50% !important;
+}
+
 /*ACESSO PAGINA SISTEMA/INDEX*/
 .logo-sistema{
     position: absolute;
 }
 
 .bg-vermelho{
-    background-color: #800000;
+    background-color: #800000 !important;
 }
 
 .bg-index{
@@ -210,6 +266,11 @@ form{
     margin-left: -2000%;
 }
 
+.scrollspySite{
+    overflow: auto;
+    height: 200px;
+}
+
 @media only screen and (max-width : 1000px){
     /*ALTERACOES TELA DE LOGIN */
     .telaLogin{
@@ -228,10 +289,6 @@ form{
         width: 100%;
         height: 50%;
     }
-    /*    
-        button{
-            height: 300%;
-        }*/
 
     /*ALTERACOES DA TELA DE CADASTRO DO PARCEIRO DE NEGOCIO*/
     .formularioCadastroPn{
@@ -251,6 +308,11 @@ form{
     
     .logoff{
         display: none;
+    }
+
+    .div-botao-comprar{
+        margin-top: 10%;
+        
     }
 }
 
