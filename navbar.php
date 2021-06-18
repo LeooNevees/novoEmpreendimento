@@ -1,16 +1,20 @@
 <?php
 include_once '/var/www/html/novoEmpreendimento/classes/Navbar.php';
 include_once '/var/www/html/novoEmpreendimento/classes/Login.php';
+include_once '/var/www/html/novoEmpreendimento/sistema.php';
 ?>
+<!-- JS -->
+<script src="/novoEmpreendimento/js/navbar.js" type="text/javascript"></script>
 
-<link href="/novoEmpreendimento/css/style.css" rel="stylesheet" type="text/css"/>
+<link href="/novoEmpreendimento/css/style.css" rel="stylesheet" type="text/css" />
 
 <nav class="navbar navbar-expand-lg navbar-light bg-vermelho">
     <div class="container">
         <a class="navbar-brand ml-auto" href="/novoEmpreendimento/index.php"><img src="/novoEmpreendimento/img/iconePeca.png" style="width: 120px; height: 50px;"></a>
         <div class="input-group mb-1 mr-3 ml-1" style="width: 60%; margin-top: 1%;">
-            <input type="text" class="form-control" placeholder="Buscar peça" aria-label="Recipient's username" aria-describedby="button-addon2">
-            <button class="btn btn-outline-secondary" type="button" id="button-addon2"><i class="fa fa-search"></i></i></button>
+            <select name="selectBuscarDados" id="selectBuscarDados" style="width: 94%;" >
+            </select>
+            <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="abrirProductBusiness()"><i class="fa fa-search"></i></button>
         </div>
 
         <div class="flex-shrink-0 dropdown mr-auto">
@@ -22,21 +26,23 @@ include_once '/var/www/html/novoEmpreendimento/classes/Login.php';
                 $login = new Login();
                 $retornoSession = $login->validarExistenciaSession();
                 if ($retornoSession === false || $login->getMensagem() == 'NAO EXISTE') {
-                    ?>
+                ?>
                     <li><a class="dropdown-item" href="/novoEmpreendimento/login.php">Fazer Login</a></li>
-          <?php }else{ ?>
+                <?php } else { ?>
                     <li><a class="dropdown-item" href="#">Configuração</a></li>
                     <li><a class="dropdown-item" href="#">Perfil</a></li>
                     <li><a class="dropdown-item" href="#">Meus Produtos</a></li>
-                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
                     <li><a class="dropdown-item" href="/novoEmpreendimento/logout.php" style="color: red;" onclick="return confirmarLogout()">Logout</a></li>
-          <?php } ?>
+                <?php } ?>
             </ul>
         </div>
 
-        <button class="navbar-toggler"  type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
-        </button> 
+        </button>
     </div>
 </nav>
 
@@ -73,7 +79,7 @@ include_once '/var/www/html/novoEmpreendimento/classes/Login.php';
                         }
 
                         $dadosModulo = $navbar->getMensagem();
-                        
+
                         $acessoModulo = $dadosModulo->links;
 
                         foreach ($acessoModulo as $acessoLinksModulo => $dadosLink) {
@@ -83,13 +89,13 @@ include_once '/var/www/html/novoEmpreendimento/classes/Login.php';
                             foreach ($linksUsuarioExp as $linkUser) {
                                 if ($linkUser == $acessoLinksModulo) {
                                     $class = 'nav-link cor-branco';
-                                    ?>
+                ?>
                                     <li class="nav-item">
                                         <a class="<?php echo $class ?>" href="<?php echo $urlLink ?>" id="navbar" role="button" aria-expanded="false">
-                    <?php echo $nomeLink ?>
+                                            <?php echo $nomeLink ?>
                                         </a>
                                     </li>
-                                    <?php
+                            <?php
                                 }
                             }
                             ?>
@@ -97,7 +103,7 @@ include_once '/var/www/html/novoEmpreendimento/classes/Login.php';
 
                         <?php } ?>
                         <!--</ul>-->
-                        <?php
+                <?php
                     }
                 } catch (Exception $ex) {
                     $mensagem = $ex->getMessage();
@@ -109,3 +115,28 @@ include_once '/var/www/html/novoEmpreendimento/classes/Login.php';
         </div>
     </div>
 </nav>
+
+<script>
+    $(document).ready(function(){
+        $("#selectBuscarDados").select2({
+            placeholder: "Buscar Peça ou Parceiro Negócio",
+            minimumInputLength: 2,
+            ajax:{
+                url: '/novoEmpreendimento/searchNavbar.php',
+                type: 'POST',
+                dataType: 'json',
+                delay: 250,
+                data: function(params){
+                    return{
+                        buscar: params.term
+                    };
+                } ,
+                processResults: function(data) {
+                    return{
+                        results: data
+                    };
+                },
+            }
+        });
+    });
+</script> 

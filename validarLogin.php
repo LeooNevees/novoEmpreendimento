@@ -1,5 +1,4 @@
 <?php
-// require_once '/var/www/html/novoEmpreendimento/classes/Xmongo.php';
 require_once 'classes/Login.php';
 
 try {
