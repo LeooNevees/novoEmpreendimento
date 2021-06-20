@@ -22,26 +22,28 @@ $pesquisa = isset($_GET['pesq']) ? mb_strtoupper(filter_input(INPUT_GET, 'pesq',
                 throw new Exception('Erro ao carregar o NavBar');
             }
 
-            if (!empty($pesquisa)) {
-                $dados = ['nome' => $pesquisa];
-                $repository = new GroupsRepository;
-                $retorno = $repository->getGroups($dados);
-                if ($retorno === false) {
-                    throw new Exception($repository->mensagem);
-                }
-
-                if ($repository->encontrados < 1) {
-                    throw new Exception('Nenhum Grupo com o nome ' . $pequisa . ' encontrado');
-                }
-
-                $resultado = json_decode($retorno);
-                $id = $resultado[0]->id;
-                if (empty($id) || !is_numeric($id)) {
-                    throw new Exception('Erro ao identificar o ID do grupo');
-                }
-                unset($dados);
-                $dados['grupo'] = $id;
+            if(empty($pesquisa)){
+                throw new Exception('Nenhum grupo fornecido. Por favor refaça o procedimento');    
             }
+
+            $dados = ['nome' => $pesquisa];
+            $repository = new GroupsRepository;
+            $retorno = $repository->getGroups($dados);
+            if ($retorno === false) {
+                throw new Exception($repository->mensagem);
+            }
+
+            if ($repository->encontrados < 1) {
+                throw new Exception('Nenhum Grupo com o nome ' . $pequisa . ' encontrado');
+            }
+
+            $resultado = json_decode($retorno);
+            $id = $resultado[0]->id;
+            if (empty($id) || !is_numeric($id)) {
+                throw new Exception('Erro ao identificar o ID do grupo');
+            }
+            unset($dados);
+            $dados['grupo'] = $id;
 
             $card = new Card(ucfirst(mb_strtolower($pesquisa)) . ' mais acessado');
             $retornoCard = $card->gerarEstrutura($dados, 3);
@@ -51,7 +53,7 @@ $pesquisa = isset($_GET['pesq']) ? mb_strtoupper(filter_input(INPUT_GET, 'pesq',
             }
 
             echo $card->getMensagem();
-        } catch (\Throwable $ex) {
+        } catch (Exception $ex) {
             echo $ex->getMessage();
             return false;
         }
