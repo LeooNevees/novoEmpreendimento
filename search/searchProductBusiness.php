@@ -39,6 +39,7 @@ $buscar = isset($_GET['search']) ? mb_strtoupper(filter_input(INPUT_GET, 'search
             }
 
             // BUSCA PARCEIRO DE NEGÓCIO
+            $teste = '';
             $dadosBusiness = array(
                 'nome_completo' => new \MongoDB\BSON\Regex(utf8_encode($buscar))
             );
