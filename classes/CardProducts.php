@@ -1,4 +1,5 @@
 <?php
+include_once '/var/www/html/novoEmpreendimento/classes/Card.php';
 /**
  * Classe para a criação de cards para os produtos
  *

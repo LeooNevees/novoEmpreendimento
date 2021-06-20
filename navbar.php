@@ -4,13 +4,14 @@ include_once '/var/www/html/novoEmpreendimento/classes/Login.php';
 ?>
 
 <link href="/novoEmpreendimento/css/style.css" rel="stylesheet" type="text/css"/>
+<script src="/novoEmpreendimento/js/navbar.js" type="text/javascript"></script>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-vermelho">
     <div class="container">
         <a class="navbar-brand ml-auto" href="/novoEmpreendimento/index.php"><img src="/novoEmpreendimento/img/iconePeca.png" style="width: 120px; height: 50px;"></a>
         <div class="input-group mb-1 mr-3 ml-1" style="width: 60%; margin-top: 1%;">
-            <input type="text" class="form-control" placeholder="Buscar peça" aria-label="Recipient's username" aria-describedby="button-addon2">
-            <button class="btn btn-outline-secondary" type="button" id="button-addon2"><i class="fa fa-search"></i></i></button>
+            <input type="text" class="form-control" placeholder="Buscar peça" aria-label="Recipient's username" aria-describedby="button-addon2" id="buscar" name="buscar">
+            <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="searchProdutcBusiness()"><i class="fa fa-search"></i></button>
         </div>
 
         <div class="flex-shrink-0 dropdown mr-auto">
