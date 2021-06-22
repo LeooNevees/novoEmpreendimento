@@ -82,7 +82,8 @@ class SingleBusinessPartner{
 			$dataAtual = date('Y');
 			$tempoCadastrado = ((int) date('Y')) - (int) substr($dados->data_cadastro, 0, 4);
 			$auxCadastro = $tempoCadastrado > 1 ? $tempoCadastrado.' anos' : '1 ano';
-			$imagem = file_exists('/var/www/html'.$dados->foto) ? $dados->foto : '/novoEmpreendimento/img/imagemNotFound.png';
+			$foto = isset($dados->foto) ? $dados->foto : '/novoEmpreendimento/img/imagemNotFound.png';
+			$imagem = file_exists($foto) ? $foto : '/novoEmpreendimento/img/imagemNotFound.png';
 			$localizacao = $dados->cidade.'-'.$dados->uf;
 
 			$array = [];
