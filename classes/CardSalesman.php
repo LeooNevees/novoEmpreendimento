@@ -58,7 +58,7 @@ class CardSalesman extends Card{
                 foreach($variavelId as $value){
                     $id = $value;
                 }
-                $onclick = "onclick=abrirCard('".$id."')";
+                $onclick = "onclick=abrirBusiness('".$id."')";
                 $nomeCompleto = isset($registros->nome_completo) ? ucwords(mb_strtolower($registros->nome_completo)): '';
                 $nomeFantasia = isset($registros->nome_fantasia) ? $registros->nome_completo : '';
                 $sexo = isset($registros->sexo) ? $registros->sexo : '';

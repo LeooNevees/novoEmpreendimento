@@ -1,7 +1,10 @@
 <?php
-$produto = isset($_GET) ? filter_input(INPUT_GET, 'product', FILTER_SANITIZE_STRING) : '';
-include __DIR__ . '/../sistema.php';
-include __DIR__.'/../classes/SingleProduct.php';
+$produto = isset($_GET['product']) ? filter_input(INPUT_GET, 'product', FILTER_SANITIZE_STRING) : '';
+$parceiroNegocio = isset($_GET['business']) ? filter_input(INPUT_GET, 'business', FILTER_SANITIZE_STRING) : '';
+
+include_once '/var/www/html/novoEmpreendimento/sistema.php';
+include_once '/var/www/html/novoEmpreendimento/classes/SingleProduct.php';
+include_once '/var/www/html/novoEmpreendimento/classes/SingleBusinessPartner.php';
 ?>
 
 <html>
@@ -23,9 +26,23 @@ include __DIR__.'/../classes/SingleProduct.php';
             echo 'Erro ao carregar o Navbar';
         }
 
-        $classeSingleProdutc = new SingleProduct;
-        $retorno = $classeSingleProdutc->gerarEstrutura($produto);
-        echo $retorno;
+        switch (true) {
+            case !empty($produto):
+                $classeSingleProdutc = new SingleProduct;
+                $retorno = $classeSingleProdutc->gerarEstrutura($produto);
+                echo $retorno;
+                break;
+
+            case !empty($parceiroNegocio):
+                $classeSingleBusiness = new SingleBusinessPartner;
+                $retorno = $classeSingleBusiness->gerarEstrutura($parceiroNegocio);
+                echo $retorno;
+                break;
+            
+            default:
+                echo 'Parâmetro não reconhecido. Por favor refaça o procedimento';
+                break;
+        }        
         ?>
     </body>
 </html>

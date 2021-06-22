@@ -253,6 +253,14 @@ form{
     font-size: 14px;
 }
 
+.card-dados-vendedor{
+    position: absolute;
+    top: 35%;
+    left: 28%;
+    height: 50%;
+    width: 68%;
+}
+
 .card-max{
     width: 100%;
     height: 100%;
