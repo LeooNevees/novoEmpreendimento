@@ -397,7 +397,7 @@ class SingleProduct{
 		}
 	}
 
-	private function buscarVendedor($id){
+	public function buscarVendedor($id){
 		try {
 			if(empty($id)){
 				throw new Exception('Parâmetros para Buscar Vendedor inválidos');

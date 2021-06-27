@@ -1,3 +1,5 @@
+<script src="/novoEmpreendimento/js/cards-index.js" type="text/javascript"></script>
+
 <?php
 include_once '/var/www/html/novoEmpreendimento/classes/Card.php';
 include_once '/var/www/html/novoEmpreendimento/classes/CardProducts.php';
@@ -42,4 +44,4 @@ try {
 }
 ?>
 
-<script src="/novoEmpreendimento/js/cards-index.js" type="text/javascript"></script>
+

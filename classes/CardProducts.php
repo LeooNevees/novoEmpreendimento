@@ -12,14 +12,16 @@ class CardProducts extends Card{
         $this->setTitulo($titulo);
     }
     
-    protected function gerarDadosEstrutura(){
+    public function gerarDadosEstrutura($dados = ''){
         try {
-            if(!is_string($this->getMensagem())){
+            if(!is_string($this->getMensagem()) && !is_string($dados)){
                 throw new Exception('Retorno informação de Cards inesperado');
             }   
-
             $retornoDecod = json_decode($this->getMensagem());
-
+            if(!empty($dados)){
+                $retornoDecod = json_decode($dados);
+            }
+    
             if(!is_array($retornoDecod) || count($retornoDecod) < 1){
                 throw new Exception('Nenhum Card encontrado');
             }
