@@ -246,11 +246,8 @@ form{
 }
 
 .card-font-promocao{
-    position: relative;
-    margin-top: -10%;
-    margin-left: 30%;
     color: rgb(7, 151, 2);
-    font-size: 14px;
+    font-size: 18px;
 }
 
 .card-dados-vendedor{
