@@ -13,7 +13,7 @@ include_once '/var/www/html/novoEmpreendimento/classes/SingleBusinessPartner.php
     <meta charset="utf-8">
     <title>Ipeças - Faça seu pedido</title>
     <!-- JS -->
-    <script src="/novoEmpreendimento/js/searchSale.js" type="text/javascript"></script>
+    <script src="/novoEmpreendimento/js/searchSingle.js" type="text/javascript"></script>
     <script src="/novoEmpreendimento/js/sistema.js" type="text/javascript"></script>
 
     <!-- CSS -->
@@ -22,27 +22,39 @@ include_once '/var/www/html/novoEmpreendimento/classes/SingleBusinessPartner.php
 
     <body class="cor-body">
         <?php
-        if (!(include __DIR__ . '/../navbar.php')) {
-            echo 'Erro ao carregar o Navbar';
-        }
-
-        switch (true) {
-            case !empty($produto):
-                $classeSingleProdutc = new SingleProduct;
-                $retorno = $classeSingleProdutc->gerarEstrutura($produto);
-                echo $retorno;
-                break;
-
-            case !empty($parceiroNegocio):
-                $classeSingleBusiness = new SingleBusinessPartner;
-                $retorno = $classeSingleBusiness->gerarEstrutura($parceiroNegocio);
-                echo $retorno;
-                break;
-            
-            default:
-                echo 'Parâmetro não reconhecido. Por favor refaça o procedimento';
-                break;
-        }        
+            try {
+                if (!(include __DIR__ . '/../navbar.php')) {
+                    echo 'Erro ao carregar o Navbar';
+                }
+        
+                switch (true) {
+                    case !empty($produto):
+                        $classeSingleProdutc = new SingleProduct;
+                        $retorno = $classeSingleProdutc->gerarEstrutura($produto);
+                        if($retorno === false){
+                            throw new Exception($classeSingleProdutc->mensagem);
+                        }
+                        echo $retorno;
+                        break;
+        
+                    case !empty($parceiroNegocio):
+                        $classeSingleBusiness = new SingleBusinessPartner;
+                        $retorno = $classeSingleBusiness->gerarEstrutura($parceiroNegocio);
+                        if($retorno === false){
+                            throw new Exception($classeSingleBusiness->mensagem);
+                        }
+                        echo $retorno;
+                        break;
+                    
+                    default:
+                        echo 'Parâmetro não reconhecido. Por favor refaça o procedimento';
+                        break;
+                } 
+            } catch (Exception $ex) {
+                trigger_error($ex->getMessage());
+                echo 'Erro: '.$ex->getMessage().'. Por favor refaça o procedimento';
+                return false;
+            }       
         ?>
     </body>
 </html>
