@@ -7,3 +7,12 @@ function searchProdutcBusiness(){
 
     window.location = '/novoEmpreendimento/search/searchProductBusiness.php?search='+buscar;
 }
+
+function myProducts(idBusiness) {
+    if(idBusiness == ''){
+        alert('Erro ao abrir Meus Produtos. Por favor refaça o procedimento');
+        return false;
+    }
+    
+    window.location = '/novoEmpreendimento/user/myProducts.php?business='+idBusiness;
+}

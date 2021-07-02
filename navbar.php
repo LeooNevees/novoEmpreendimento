@@ -22,13 +22,14 @@ include_once '/var/www/html/novoEmpreendimento/classes/Login.php';
                 <?php
                 $login = new Login();
                 $retornoSession = $login->validarExistenciaSession();
+                $idSession = "'".$_SESSION['id']."'";
                 if ($retornoSession === false || $login->getMensagem() == 'NAO EXISTE') {
                     ?>
                     <li><a class="dropdown-item" href="/novoEmpreendimento/login.php">Fazer Login</a></li>
           <?php }else{ ?>
                     <li><a class="dropdown-item" href="#">Configuração</a></li>
                     <li><a class="dropdown-item" href="#">Perfil</a></li>
-                    <li><a class="dropdown-item" href="#">Meus Produtos</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="myProducts(<?php echo $idSession ?>)">Meus Produtos</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" href="/novoEmpreendimento/logout.php" style="color: red;" onclick="return confirmarLogout()">Logout</a></li>
           <?php } ?>
