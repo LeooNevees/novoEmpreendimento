@@ -43,13 +43,13 @@ try {
                 <div class="row" style="margin-top: 1%;">
                     <div class="col-md-12 col-lg-6">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="nome_produto" name="nome_produto" placeholder="Insira o nome do Produto">
+                            <input type="text" class="form-control" id="nome_produto" name="Nome Produto" placeholder="Nome Produto">
                             <label for="floatingInput">Nome Produto</label>
                         </div><br>
                     </div>
                     <div class="col-md-12 col-lg-6">
                         <div class="form-floating">
-                            <input type="number" class="form-control" id="quantidade_produto" name="quantidade_produto" placeholder="Quantidade disponível" onkeydown="return validarNumero(this, 1000)">
+                            <input type="number" class="form-control" id="quantidade_produto" name="quantidade_produto" placeholder="Quantidade Disponível" onkeydown="return validarNumero(this, 1000)">
                             <label for="floatingInput">Qtde Disponível Estoque</label>
                         </div>
                     </div>
@@ -64,14 +64,25 @@ try {
                 <div class="row" style="margin-top: 3%;">
                     <div class="col-md-12 col-lg-6">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="cor_produto" name="cor_produto" placeholder="Cor Produto">
+                            <input type="text" class="form-control" id="cor_produto" name="cor_produto" placeholder="Cor Produto" list="listaCor">
                             <label for="floatingInput">Cor </label>
                         </div><br>
+                        <datalist id="listaCor">
+                            <option>Branco</option>
+                            <option>Preto</option>
+                            <option>Cinza</option>
+                            <option>Amarelo</option>
+                            <option>Laranja</option>
+                            <option>Vermelho</option>
+                            <option>Roxo</option>
+                            <option>Azul</option>
+                            <option>Verde</option>
+                        </datalist>
                     </div>
                     <div class="col-md-12 col-lg-6">
                         <div class="form-floating">
-                            <select class="form-select" id="tipo" aria-label="Floating label select example">
-                                <option value="0">Selecione o Tipo</option>
+                            <select class="form-select" id="tipo" name="tipo" aria-label="Floating label select example" placeholder="Tipo">
+                                <option value="">Selecione o Tipo</option>
                                 <option value="NOVO">Novo</option>
                                 <option value="USADO">Usado</option>
                             </select>
@@ -83,8 +94,8 @@ try {
                 <div class="row">
                 <div class="col-md-12 col-lg-6">
                         <div class="form-floating">
-                            <select class="form-select" id="tipo" aria-label="Floating label select example">
-                                <option value="0">Selecione o Grupo</option>
+                            <select class="form-select" id="grupo" name="grupo" aria-label="Floating label select example" placeholder="Grupo">
+                                <option value="">Selecione o Grupo</option>
                                 <?php
                                 foreach ($retornoDecod as $value) { ?>
                                     <option value="<?php echo $value->id ?>"><?php echo ucfirst(mb_strtolower($value->nome)) ?></option>
@@ -105,7 +116,7 @@ try {
                 <div class="row">
                     <div class="col-md-12 col-lg-6">
                         <div class="form-floating">
-                            <select class="form-select" id="promocao" aria-label="Floating label select example" onchange="ativarPromocao()">
+                            <select class="form-select" id="promocao" name="promocao" aria-label="Floating label select example" onchange="ativarPromocao()" placeholder="Promoção">
                                 <option value="NAO">Não</option>
                                 <option value="SIM">Sim</option>
                             </select>
@@ -114,7 +125,7 @@ try {
                     </div>
                     <div class="col-md-12 col-lg-6" style="display: none;" id="div_porc_desconto">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="porcentagem_desconto" name="porcentagem_desconto" placeholder="Insira a Porcentagem de desconto" onkeydown="return validarNumero(this, 100)" maxlength="3">
+                            <input type="text" class="form-control" id="porcentagem_desconto" name="porcentagem_desconto" placeholder="Porcentagem Desconto" onkeydown="return validarNumero(this, 100)" maxlength="3" value="0">
                             <label for="floatingInput">Porcentagem de Desconto</label>
                         </div><br>
                     </div>
@@ -122,9 +133,9 @@ try {
 
                 <div class="row">
                     <div class="col-12">
-                        <div class="input-group">
-                        <input type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
-                        <button class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04">Button</button>
+                        <div class="mb-3">
+                            <label for="formFileSm" class="form-label">Selecionar imagens</label>
+                            <input class="form-control form-control-sm" id="formFileSm" type="file" multiple="multiple">
                         </div>
                     </div>
                 </div><br>
@@ -135,10 +146,9 @@ try {
                         <button class="btn btn-outline-danger btn-block" type="button" onclick="cancelar()">Cancelar</button>
                     </div>
                     <div class="col-md-12 col-lg-8" id="botaoCadastrar">
-                        <button class="btn btn-success btn-block" type="button" onclick="cadastrar_parceiro()">Cadastrar</button>
+                        <button class="btn btn-success btn-block" type="button" onclick="cadastrarProduto()">Cadastrar</button>
                     </div>
                 </div>
-
 
                 <input type="hidden" id="uf" name="uf">
                 <input type="hidden" id="ibge" name="ibge">

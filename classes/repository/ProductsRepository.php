@@ -107,4 +107,32 @@ class ProductsRepository{
             return false;
         }
     }
+
+    /**
+     * $dados Array
+     * return Object || Boolean 
+     */
+    public function insertProduct($dados){
+        try {
+            if(empty($dados) || !count($dados)){
+                throw new Exception('Parâmetros inválidos para a função insertProduct');
+            }
+
+            $requisicao = array(
+                'tabela' => 'produtos',
+                'acao' => 'cadastrar',
+                'dados' => $dados
+            );
+    
+            $retorno = $this->conexao->requisitar($requisicao);
+            if ($retorno === false) {
+                throw new Exception($this->conexao->getMensagem());
+            }
+            $this->afetados = $this->conexao->getAfetados();
+            return $this->conexao->getMensagem();
+        } catch (Exception $ex) {
+            $this->mensagem = $ex->getMessage();
+            return false;
+        }
+    } 
 }

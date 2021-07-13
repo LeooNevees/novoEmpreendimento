@@ -8,9 +8,6 @@ function ativarPromocao() {
 function validarNumero(dados, limite = ''){
     var valor = dados.value;
     var idInput = dados.name;
-    console.log('Valor: '+valor);
-    console.log('Name: '+idInput);
-    console.log('Limite: '+limite);
     if(isNaN(valor)){
         $("#"+idInput).val('');
         alert('Não é valor válido');
@@ -43,9 +40,61 @@ function mascaraMoeda(event) {
     event.target.value = maskCurrency(digitsFloat)
   }
   
-  function maskCurrency(valor, locale = 'pt-BR', currency = 'BRL') {
-    return new Intl.NumberFormat(locale, {
-      style: 'currency',
-      currency
-    }).format(valor)
-  }
+function maskCurrency(valor, locale = 'pt-BR', currency = 'BRL') {
+return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency
+}).format(valor)
+}
+
+function cadastrarProduto(){
+    console.log('Iniciando Cadastro de Produto');
+    var arrayValidar = ['nome_produto', 'quantidade_produto', 'descricao_produto', 'cor_produto', 'tipo', 'grupo', 'valor', 'promocao'];
+    var erro = false;
+    arrayValidar.forEach(function (input) {
+        if(erro === false && $("#"+input).val() == ''){
+            erro = true;
+            alert('Necessário informar '+$("#"+input).attr("placeholder"));
+            return false;
+        }
+    });
+    if(erro === true){
+        return false;
+    }
+
+    console.log('Iniciando Ajax');
+    $.ajax({
+        url: '/novoEmpreendimento/products/ajax_add_product.php',
+        type: 'post',
+        data: {
+            'nomeProduto': $("#nome_produto").val(),
+            'quantidadeProduto': $("#quantidade_produto").val(),
+            'descricaoProduto': $("#descricao_produto").val(),
+            'corProduto': $("#cor_produto").val(),
+            'tipo': $("#tipo").val(),
+            'grupo': $("#grupo").val(),
+            'valor': $("#valor").val(),
+            'promocao': $("#promocao").val(),
+            'porcentagemPromocao': $("#porcentagem_desconto").val()
+        },
+        dataType: 'json',
+        success: function (resposta) {
+            console.log(resposta);
+            if(resposta.erro === true){
+                alert(reposta.mensagem);
+                return false;
+            }
+            alert(resposta.mensagem);
+            myProducts(resposta.business);
+        }
+    })
+}
+
+function myProducts(idBusiness) {
+    if(idBusiness == ''){
+        alert('Erro ao abrir Meus Produtos. Por favor refaça o procedimento');
+        return false;
+    }
+    
+    window.location = '/novoEmpreendimento/user/myProducts.php?business='+idBusiness;
+}
