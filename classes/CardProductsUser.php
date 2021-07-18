@@ -6,7 +6,7 @@ include_once '/var/www/html/novoEmpreendimento/classes/Card.php';
  * @author leoneves
  */
 
-class CardProducts extends Card{
+class CardProductsUser extends Card{
     
     function __construct($titulo) {
         $this->setTitulo($titulo);
@@ -52,7 +52,7 @@ class CardProducts extends Card{
                     $porcPromocao = $registros->porcentagem_promocao;
                     $valorSemDesconto = isset($registros->valor) ? 'R$ '.number_format((($registros->valor/100*$porcPromocao)+$registros->valor), 2, ',', '.') : '';
                     $array[] = "<div class='col'>"
-                                ."<div class='card shadow-sm card-max' style='cursor:pointer;' $onclick>"
+                                ."<div class='card shadow-sm card-max'>"
                                     ."<img class='card-max' src='$imagem'>"
                                     ."<div class='card-footer text-muted'>"
                                         ."<p class='card-text'>$nome</p>"
@@ -60,7 +60,7 @@ class CardProducts extends Card{
                                         ."<p><font class='card-font-valor'>$valor &nbsp;</font><font class='card-font-promocao'> $porcPromocao% OFF</font></p>"
                                         ."<div class='d-flex justify-content-between align-items-center'>"
                                         ."<small class='color-vermelho'>$tipo</small>"
-                                            ."<small class='text-muted'>$visualizacao</small>"
+                                        ."<i class='fas fa-edit' style='cursor:pointer;'></i>"
                                         ."</div>"
                                     ."</div>"
                                 ."</div>"
@@ -69,19 +69,26 @@ class CardProducts extends Card{
                 }
                 
                 $array[] = "<div class='col'>"
-                                ."<div class='card shadow-sm' style='cursor:pointer;' $onclick>"
-                                    ."<img class='tamanho-imagem-card' src='$imagem'>"
+                                ."<div class='card-max card shadow-sm'>"
+                                    ."<img class='tamanho-imagem-card card-max' src='$imagem'>"
                                     ."<div class='card-footer text-muted'>"
                                         ."<p class='card-text'>$nome</p>"
                                         ."<p class='card-font-valor'>$valor</p>"
                                         ."<div class='d-flex justify-content-between align-items-center'>"
                                         ."<small class='color-vermelho'>$tipo</small>"
-                                            ."<small class='text-muted'>$visualizacao</small>"
+                                        ."<i class='fas fa-edit' style='cursor:pointer;'></i>"
                                         ."</div>"
                                     ."</div>"
                                 ."</div>"
                             ."</div>";
             }
+
+            $array[] = "<div class='col'>"
+                            ."<div class='card shadow-sm card-max' style='widht:100%; height:100%; cursor:pointer;' onclick='adicionar_produto()'>"
+                                ."<img src='/novoEmpreendimento/img/mais.png' class='dist-adicionar'>"
+                                ."<span class='text-center espaco-5' style='color:green; font-weight:bold;'>Adicionar Produto</span>"
+                            ."</div>"
+                        ."</div>";
             $this->setMensagem($array);
             return true;
         } catch (Exception $ex) {

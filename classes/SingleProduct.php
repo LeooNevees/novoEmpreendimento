@@ -84,9 +84,6 @@ class SingleProduct{
 				//Imagem
 				$onclickCompra = "onclick=efetuarCompra('".$this->produto."')";
 				$onclickCarrinho = "onclick=adicionarCarrinho('".$this->produto."')";
-				$auxImg = isset($registros->imagens) ? $registros->imagens : '';
-				$urlImagem = !empty($auxImg) ? $auxImg->link_1 : '';
-				$imagem = file_exists('/var/www/html' . $urlImagem) ? $urlImagem : '/novoEmpreendimento/img/imagemNotFound.png';
 				//Detalhes
 				$tipo = isset($registros->tipo) ? ucfirst(mb_strtolower($registros->tipo)) : '';
 				$quantidadeVendida = isset($registros->quantidade_vendida) ? ($registros->quantidade_vendida > 1 ? $registros->quantidade_vendida.' Vendidos' : $registros->quantidade_vendida.' Vendido')  : '';
@@ -119,26 +116,33 @@ class SingleProduct{
 								."</div>";
 				}
 
-				$contadorButton = 0;
-				foreach ($registros->imagens as $value) {
-					if($contadorButton == 0){
-						if(count((array)$registros->imagens) == 1){
+				$auxButton[] = "<button class='bg-vermelho' type='button' data-bs-target='#carouselExampleIndicators' data-bs-slide-to='0' aria-label='Slide 0'></button>";
+				$auxDiv[] = "<div class='carousel-item width-100 height-100'><img src='/novoEmpreendimento/img/imagemNotFound.png' class='d-block w-100' alt='...'></div>";
+
+				if(isset($registros->imagens)){//TRATAMENTO DAS IMAGENS
+					$contadorButton = 0;
+					unset($auxButton);
+					unset($auxDiv);
+					foreach ($registros->imagens as $value) {
+						if($contadorButton == 0){
+							if(count((array)$registros->imagens) == 1){
+								$auxButton[] = "<button type='button' data-bs-target='#carouselExampleIndicators' data-bs-slide-to='$contadorButton' class='active bg-vermelho' aria-current='true' aria-label='Slide $contadorButton'></button>";
+								$auxDiv[] = "<div class='carousel-item active'><img src='$value' class='d-block w-100 width-100 height-100' alt='...'></div>";
+								$contadorButton++;
+								continue;
+							}
 							$auxButton[] = "<button type='button' data-bs-target='#carouselExampleIndicators' data-bs-slide-to='$contadorButton' class='active bg-vermelho' aria-current='true' aria-label='Slide $contadorButton'></button>";
 							$auxDiv[] = "<div class='carousel-item active'><img src='$value' class='d-block w-100 width-100 height-100' alt='...'></div>";
 							$contadorButton++;
 							continue;
 						}
-						$auxButton[] = "<button type='button' data-bs-target='#carouselExampleIndicators' data-bs-slide-to='$contadorButton' class='active bg-vermelho' aria-current='true' aria-label='Slide $contadorButton'></button>";
-						$auxDiv[] = "<div class='carousel-item active'><img src='$value' class='d-block w-100 width-100 height-100' alt='...'></div>";
+						$auxButton[] = "<button class='bg-vermelho' type='button' data-bs-target='#carouselExampleIndicators' data-bs-slide-to='$contadorButton' aria-label='Slide $contadorButton'></button>";
+						$auxDiv[] = "<div class='carousel-item width-100 height-100'><img src='$value' class='d-block w-100' alt='...'></div>";
 						$contadorButton++;
-						continue;
 					}
-					$auxButton[] = "<button class='bg-vermelho' type='button' data-bs-target='#carouselExampleIndicators' data-bs-slide-to='$contadorButton' aria-label='Slide $contadorButton'></button>";
-					$auxDiv[] = "<div class='carousel-item width-100 height-100'><img src='$value' class='d-block w-100' alt='...'></div>";
-					$contadorButton++;
 				}
 				$button = isset($auxButton) ? implode("\n", $auxButton) : '';
-				$div = implode("\n", $auxDiv);
+				$div = implode("\n", $auxDiv);	
 				//ESTRUTURA
 				$array[] = "<br>"
 				."<div class='row row-cols-1 row-cols-lg-2'>"
@@ -310,34 +314,36 @@ class SingleProduct{
 				$iconeEstrela = isset($retornoAvaliacao['icone']) ? $retornoAvaliacao['icone'] : '';
 				$classe = isset($retornoAvaliacao['classe']) ? $retornoAvaliacao['classe'] : '';
 				
-				$auxOpinioes = isset($registros->opinioes) ? $registros->opinioes : '';
 				$arrayOpinioes = [];
 				$contador = 1;
-				foreach ($auxOpinioes as $valor) {
-					$retornoEstrela = $this->montarEstrela($valor->estrela);
-					$estrelas = $retornoEstrela['arrayEstrela'];
-					$titulo = isset($valor->titulo) ? ucfirst(mb_strtolower($valor->titulo)) : 'Sem título';
-					$descricao = isset($valor->descricao) ? ucfirst(mb_strtolower($valor->descricao)) : 'Sem descrição';
-					$autor = isset($valor->nome_parceiro) ? ucfirst(mb_strtolower(strstr($valor->nome_parceiro, ' ', true))) : 'Autor Desconhecido';
-					$auxData = isset($valor->data_hora) ? new DateTime($valor->data_hora) : '';
-					$data = !empty($auxData) ? $auxData->format('d-m-Y H:i') : '';
-
-					$arrayOpinioes[] = "<div class='accordion-item'>"
-						."<h2 class='accordion-header' id='panelsStayOpen-heading$contador'>"
-							."<button class='accordion-button collapsed' type='button' data-bs-toggle='collapse' data-bs-target='#panelsStayOpen-collapse$contador' aria-expanded='false' aria-controls='panelsStayOpen-collapse$contador'>
-							$estrelas &nbsp;<i class='cor-letra-cinza fas fa-minus'></i>&nbsp; $titulo
-							</button>"
-						."</h2>"
-						."<div id='panelsStayOpen-collapse$contador' class='accordion-collapse collapse' aria-labelledby='panelsStayOpen-heading$contador' style='background-color:white;'>"
-							."<div class='accordion-body' >"
-								."$descricao"
-								."<footer class='blockquote-footer espaco-2 text-right' title='$data'>$autor</footer>"
+				if(isset($registros->opinioes)){
+					foreach ($registros->opinioes as $valor) {
+						$retornoEstrela = $this->montarEstrela($valor->estrela);
+						$estrelas = $retornoEstrela['arrayEstrela'];
+						$titulo = isset($valor->titulo) ? ucfirst(mb_strtolower($valor->titulo)) : 'Sem título';
+						$descricao = isset($valor->descricao) ? ucfirst(mb_strtolower($valor->descricao)) : 'Sem descrição';
+						$autor = isset($valor->nome_parceiro) ? ucfirst(mb_strtolower(strstr($valor->nome_parceiro, ' ', true))) : 'Autor Desconhecido';
+						$auxData = isset($valor->data_hora) ? new DateTime($valor->data_hora) : '';
+						$data = !empty($auxData) ? $auxData->format('d-m-Y H:i') : '';
+	
+						$arrayOpinioes[] = "<div class='accordion-item'>"
+							."<h2 class='accordion-header' id='panelsStayOpen-heading$contador'>"
+								."<button class='accordion-button collapsed' type='button' data-bs-toggle='collapse' data-bs-target='#panelsStayOpen-collapse$contador' aria-expanded='false' aria-controls='panelsStayOpen-collapse$contador'>
+								$estrelas &nbsp;<i class='cor-letra-cinza fas fa-minus'></i>&nbsp; $titulo
+								</button>"
+							."</h2>"
+							."<div id='panelsStayOpen-collapse$contador' class='accordion-collapse collapse' aria-labelledby='panelsStayOpen-heading$contador' style='background-color:white;'>"
+								."<div class='accordion-body' >"
+									."$descricao"
+									."<footer class='blockquote-footer espaco-2 text-right' title='$data'>$autor</footer>"
+								."</div>"
 							."</div>"
-						."</div>"
-					."</div>";
-
-					$contador++;
+						."</div>";
+	
+						$contador++;
+					}
 				}
+				
 				$opinioes = implode("\n", $arrayOpinioes);
 
 				$retVendedor = $this->buscarVendedor($registros->id_vendedor);

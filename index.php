@@ -14,8 +14,8 @@
                 throw new Exception('Erro no include de páginas do Index');
             }
         } catch (Exception $ex) {
-            header('location: error404.php');
             trigger_error($ex->getMessage());
+            header('location: error404.php');
         }
         ?>
     </body>
