@@ -47,8 +47,7 @@ return new Intl.NumberFormat(locale, {
 }).format(valor)
 }
 
-function cadastrarProduto(){
-    console.log('Iniciando Cadastro de Produto');
+function cadastrarProduto(){ 
     var arrayValidar = ['nome_produto', 'quantidade_produto', 'descricao_produto', 'cor_produto', 'tipo', 'grupo', 'valor', 'promocao'];
     var erro = false;
     arrayValidar.forEach(function (input) {
@@ -62,26 +61,27 @@ function cadastrarProduto(){
         return false;
     }
 
-    console.log('Iniciando Ajax');
+    if($("#promocao").val() == 'SIM' && parseFloat($("#porcentagem_desconto").val()) < 1){
+        alert('Necessário informar a Porcentagem de Desconto');
+        return false;
+    }
+
+    if($("#imagens_produto").val() == ''){
+        alert('Necessário selecionar pelo menos uma Imagem');
+        return false;
+    }
+
     $.ajax({
         url: '/novoEmpreendimento/products/ajax_add_product.php',
         type: 'post',
-        data: {
-            'nomeProduto': $("#nome_produto").val(),
-            'quantidadeProduto': $("#quantidade_produto").val(),
-            'descricaoProduto': $("#descricao_produto").val(),
-            'corProduto': $("#cor_produto").val(),
-            'tipo': $("#tipo").val(),
-            'grupo': $("#grupo").val(),
-            'valor': $("#valor").val(),
-            'promocao': $("#promocao").val(),
-            'porcentagemPromocao': $("#porcentagem_desconto").val()
-        },
+        data: new FormData($('#myForm')[0]),
+        cache: false,
+        contentType: false,
+        processData: false,
         dataType: 'json',
         success: function (resposta) {
-            console.log(resposta);
-            if(resposta.erro === true){
-                alert(reposta.mensagem);
+            if(resposta.status === 'ERRO'){
+                alert(resposta.mensagem);
                 return false;
             }
             alert(resposta.mensagem);

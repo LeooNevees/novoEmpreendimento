@@ -37,7 +37,7 @@ class Product {
                 throw new Exception($this->mensagem);
             }
 
-            $retornoCadastro = $this->efetuarCadastro($retornoCorrigido);
+            $retornoCadastro = $this->efetuarCadastro($retornoValidacao);
             if($retornoCadastro === false){
                 throw new Exception('Erro ao tentar cadastrar o Produto. '.$this->mensagem);
             }
@@ -60,9 +60,7 @@ class Product {
             }
 
             $v_array = [];
-            $v_array = array_map('mb_strtoupper', array_map('utf8_encode', array_map('trim', $array)));
-
-            // $teste = number_format($array['valor'], 2);
+            $v_array = array_map('mb_strtoupper', array_map('trim', $array));       
 
             return $v_array;    
         } catch (Exception $ex) {
@@ -100,14 +98,32 @@ class Product {
                         throw new Exception('Grupo Inativo. Por favor selecione outro Grupo');
                     }
                 }
+
+                if($campo == 'valor'){
+                    $find = array("R$"," ", ".");
+                    $replace = array("");
+                    $arr = array($params['valor']);
+                    $auxValor = str_replace($find,$replace,$arr);
+                    $params['valor'] = substr(str_replace(',', '.', $auxValor[0]), 2);
+                }
+
                 if($campo == 'promocao' && $params[$campo] == 'SIM'){
                     if(empty($params['porcentagemPromocao']) || $params['porcentagemPromocao'] < 1){
                         throw new Exception('Porcentagem de desconto inválido (Mínimo:1 Max:99)');                        
                     }
                 }
             }
-            return true;
 
+            foreach ($_FILES['imagens_produto']['name'] as $imagem) {
+                if(empty($imagem)){
+                    throw new Exception('Necessário selecionar pelo menos uma imagem');   
+                }
+                if(!in_array(pathinfo($imagem, PATHINFO_EXTENSION), ['png', 'jpeg', 'jpg'])){
+                    throw new Exception('Extensão inválida para a imagem '.$imagem);
+                }
+            }
+            
+            return $params;
         } catch (Exception $ex) {
             $this->mensagem = $ex->getMessage();
             return false;
@@ -120,10 +136,16 @@ class Product {
                 throw new Exception('Parâmetros inválidos para a função efetuarCadastro');
             }
 
+            $retornoUpload = $this->uploadImagem();
+            if($retornoUpload === false){
+                throw new Exception($this->mensagem);
+            }
+
             $dados = array(
                 'nome' => $params['nomeProduto'],
-                'descricao' => $params['nomeProduto'],
-                'quantidade_estoque' => $params['nomeProduto'],
+                'descricao' => $params['descricaoProduto'],
+                'cor' => $params['corProduto'],
+                'quantidade_estoque' => $params['quantidadeProduto'],
                 'quantidade_vendida' => 0,
                 'porcentagem_promocao' => $params['porcentagemPromocao'],
                 'valor' => (float) $params['valor'],
@@ -132,7 +154,8 @@ class Product {
                 'data_cadastro' => date('Y-m-d'),
                 'visualizacao' => 0,
                 'grupo' => $params['grupo'],
-                'id_vendedor' => $_SESSION['id']
+                'id_vendedor' => $_SESSION['id'],
+                'imagens' => $retornoUpload
             );
             $classeProduto = new ProductsRepository;
             $retornoCadastro = $classeProduto->insertProduct($dados);
@@ -142,7 +165,39 @@ class Product {
             if($classeProduto->afetados < 1){
                 throw new Exception('Produto não cadastrado. Por favor tente novamente (Erro: '.$classeProduto->mensagem.')');
             }
+
             return true;
+        } catch (Exception $ex) {
+            $this->mensagem = $ex->getMessage();
+            return false;
+        }
+    }
+
+    private function uploadImagem(){
+        try {
+            if(!isset($_FILES['imagens_produto'])){
+                throw new Exception('Parâmetros inválidos para uploadImagem');
+            }
+            $arrayRetorno = [];
+            $pasta = '/var/www/html/novoEmpreendimento/files/'.$_SESSION['id'].'/';
+            if (!file_exists($pasta)){
+                mkdir($pasta, 0777);
+            }
+
+            $nomeArquivo = $_FILES['imagens_produto']['name'];
+            $tmpArquivo = $_FILES['imagens_produto']['tmp_name'];
+
+            for ($contador=0; $contador < count($nomeArquivo); $contador++) {     
+                $novoNome = date('YmdHis').'.'.pathinfo($nomeArquivo[$contador], PATHINFO_EXTENSION);
+
+                if(!move_uploaded_file($tmpArquivo[$contador], $pasta.$novoNome)){
+                    throw new Exception('Erro ao fazer o Upload da imagem: '.$nomeArquivo[$contador].'. Por favor, refaça o procedimento');
+                }
+                
+                $arrayRetorno['link_'.((int) $contador + 1)] = substr($pasta, 13).$novoNome;
+            }
+
+            return $arrayRetorno;
         } catch (Exception $ex) {
             $this->mensagem = $ex->getMessage();
             return false;

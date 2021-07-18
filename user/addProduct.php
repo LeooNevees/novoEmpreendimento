@@ -35,7 +35,7 @@ try {
             return false;
         }?>
         <div class="formularioCadastroPn">
-            <form>
+            <form id="myForm">
                 <div class="col-12">
                     <a href="#" class="logo"><img src="/novoEmpreendimento/img/temp.png" class="img"> Cadastrar Produto <font style=" color: #DF0101;">Ipeças</font></a>
                 </div>
@@ -43,7 +43,7 @@ try {
                 <div class="row" style="margin-top: 1%;">
                     <div class="col-md-12 col-lg-6">
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="nome_produto" name="Nome Produto" placeholder="Nome Produto">
+                            <input type="text" class="form-control" id="nome_produto" name="nome_produto" placeholder="Nome Produto">
                             <label for="floatingInput">Nome Produto</label>
                         </div><br>
                     </div>
@@ -134,8 +134,8 @@ try {
                 <div class="row">
                     <div class="col-12">
                         <div class="mb-3">
-                            <label for="formFileSm" class="form-label">Selecionar imagens</label>
-                            <input class="form-control form-control-sm" id="formFileSm" type="file" multiple="multiple">
+                            <label for="formFileSm" class="form-label">Selecionar imagens (png, jpeg ou jpg)</label>
+                            <input class="form-control form-control-sm" id="imagens_produto" name="imagens_produto[]" type="file" multiple="multiple">
                         </div>
                     </div>
                 </div><br>

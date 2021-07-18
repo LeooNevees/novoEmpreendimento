@@ -38,7 +38,7 @@ class CardProducts extends Card{
                 $cor = isset($registros->cor) ? $registros->cor : '';
                 $auxImg = isset($registros->imagens) ? $registros->imagens : '';
                 $urlImagem = !empty($auxImg) ? $auxImg->link_1 : '';
-                $imagem = file_exists('/var/www/html'.$urlImagem) ? $urlImagem : '/novoEmpreendimento/img/imagemNotFound.png';
+                $imagem = !empty($urlImagem) && file_exists('/var/www/html'.$urlImagem) ? $urlImagem : '/novoEmpreendimento/img/imagemNotFound.png';
                 $quantidadeEstoque = isset($registros->quantidade_estoque) ? $registros->quantidade_estoque : ''; 
                 $quantidadeVendida = isset($registros->quantidade_vendida) ? $registros->quantidade_vendida : '';
                 $valor = isset($registros->valor) ? 'R$ '.number_format($registros->valor, 2, ',', '.') : '';

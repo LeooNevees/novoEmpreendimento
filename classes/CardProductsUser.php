@@ -38,7 +38,7 @@ class CardProductsUser extends Card{
                 $cor = isset($registros->cor) ? $registros->cor : '';
                 $auxImg = isset($registros->imagens) ? $registros->imagens : '';
                 $urlImagem = !empty($auxImg) ? $auxImg->link_1 : '';
-                $imagem = file_exists('/var/www/html'.$urlImagem) ? $urlImagem : '/novoEmpreendimento/img/imagemNotFound.png';
+                $imagem = !empty($urlImagem) && file_exists('/var/www/html'.$urlImagem) ? $urlImagem : '/novoEmpreendimento/img/imagemNotFound.png';
                 $quantidadeEstoque = isset($registros->quantidade_estoque) ? $registros->quantidade_estoque : ''; 
                 $quantidadeVendida = isset($registros->quantidade_vendida) ? $registros->quantidade_vendida : '';
                 $valor = isset($registros->valor) ? 'R$ '.number_format($registros->valor, 2, ',', '.') : '';
@@ -69,8 +69,8 @@ class CardProductsUser extends Card{
                 }
                 
                 $array[] = "<div class='col'>"
-                                ."<div class='card shadow-sm'>"
-                                    ."<img class='tamanho-imagem-card' src='$imagem'>"
+                                ."<div class='card-max card shadow-sm'>"
+                                    ."<img class='tamanho-imagem-card card-max' src='$imagem'>"
                                     ."<div class='card-footer text-muted'>"
                                         ."<p class='card-text'>$nome</p>"
                                         ."<p class='card-font-valor'>$valor</p>"
@@ -84,7 +84,7 @@ class CardProductsUser extends Card{
             }
 
             $array[] = "<div class='col'>"
-                            ."<div class='card shadow-sm' style='widht:100%; height:100%; cursor:pointer;' onclick='adicionar_produto()'>"
+                            ."<div class='card shadow-sm card-max' style='widht:100%; height:100%; cursor:pointer;' onclick='adicionar_produto()'>"
                                 ."<img src='/novoEmpreendimento/img/mais.png' class='dist-adicionar'>"
                                 ."<span class='text-center espaco-5' style='color:green; font-weight:bold;'>Adicionar Produto</span>"
                             ."</div>"

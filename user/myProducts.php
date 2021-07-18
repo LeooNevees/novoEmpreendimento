@@ -25,7 +25,7 @@ $idBusiness = isset($_GET['business']) ? filter_input(INPUT_GET, 'business', FIL
             }
 
             $classeProducts = new CardProductsUser('Itens à venda');
-            $retornoProd = $classeProducts->gerarEstrutura(array('id_vendedor' => $idBusiness), 6);
+            $retornoProd = $classeProducts->gerarEstrutura(array('id_vendedor' => $idBusiness), 12);
             if($retornoProd === false){
                 throw new Exception('Erro ao gerar a Estrutura dos produtos');
             }
