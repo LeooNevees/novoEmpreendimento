@@ -15,6 +15,7 @@ class Product {
     public $mensagem;
     public $encontrados = 0;
     public $cadastrados = 0;
+    public $afetados = 0;
 
     public function __construct() {
         if(!isset($_SESSION)){
@@ -198,6 +199,74 @@ class Product {
             }
 
             return $arrayRetorno;
+        } catch (Exception $ex) {
+            $this->mensagem = $ex->getMessage();
+            return false;
+        }
+    }
+
+    public function inativarProduto($idProduto){
+        try {
+            if(empty($idProduto) || !is_string($idProduto)){
+                throw new Exception('Parâmetro inválido para a função inativarProduto');
+            }
+
+            $retornoProduto = $this->buscarProduto($idProduto);
+            if($retornoProduto === false){
+                throw new Exception($this->mensagem);
+            }
+
+            if($this->encontrados < 1){
+                throw new Exception('Produto não encontrado. Por favor refaça o procedimento');
+            }
+
+            $retornoInativ = $this->efetivarInativacao($idProduto);
+            if($retornoInativ === false){
+                throw new Exception($this->mensagem);
+            }
+
+            if($this->afetados < 1){
+                throw new Exception('Erro não especificado ao tentar inativar o item '.$idProduto.'. Por favor refaça o procedimento');
+            }
+
+            return true;
+        } catch (Exception $ex) {
+            $this->mensagem = $ex->getMessage();
+            return false;
+        }
+    }
+
+    private function buscarProduto($idProduto){
+        try {
+            if(empty($idProduto) || !is_string($idProduto)){
+                throw new Exception('Parâmetro inválido para a função buscarProduto');
+            }  
+            
+            $classeProducts = new ProductsRepository;
+            $retornoProduto = $classeProducts->getProduct($idProduto);
+            
+            $this->encontrados = $classeProducts->encontrados;
+            return $retornoProduto;
+        } catch (Exception $ex) {
+            $this->mensagem = $ex->getMessage();
+            return false;
+        }
+    }
+
+    private function efetivarInativacao($idProduto){
+        try {
+            if(empty($idProduto) || !is_string($idProduto)){
+                throw new Exception('Parâmetro inválido para a função efetivarInativacao');
+            }  
+            
+            $classeProducts = new ProductsRepository;
+            $retornoProduto = $classeProducts->update($idProduto, array('status'=>'INATIVO'));
+            if($retornoProduto === false){
+                throw new Exception('Erro: '.$classeProducts->mensagem.' ao tentar inativar o Item: '.$idProduto);
+            }            
+
+            $this->afetados = $classeProducts->afetados;
+            return $retornoProduto;
         } catch (Exception $ex) {
             $this->mensagem = $ex->getMessage();
             return false;

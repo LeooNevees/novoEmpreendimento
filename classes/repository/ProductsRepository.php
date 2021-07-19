@@ -109,6 +109,36 @@ class ProductsRepository{
     }
 
     /**
+     * $idProduto String
+     * $params Array
+     * return Object || Boolean 
+     */
+    public function update(string $idProduto, array $params){
+        try {
+            if(empty($idProduto) || !count($params)){
+                throw new Exception('Parâmertos inválidos na função Update Products');
+            }
+            $requisicao = array(
+                'tabela' => 'produtos',
+                'acao' => 'atualizar',
+                '_id' => $idProduto,
+                'dados' => $params
+            );
+
+            $retorno = $this->conexao->requisitar($requisicao);
+            if ($retorno === false) {
+                throw new Exception($this->conexao->getMensagem());
+            }
+            $this->afetados = $this->conexao->getAfetados();
+            $this->mensagem = $this->conexao->getMensagem();
+            return true;
+        } catch (Exception $ex) {
+            $this->mensagem = $ex->getMessage();
+            return false;
+        }
+    }
+
+    /**
      * $dados Array
      * return Object || Boolean 
      */

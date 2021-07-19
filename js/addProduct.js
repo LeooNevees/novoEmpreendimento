@@ -29,7 +29,6 @@ function formataDinheiro() {
     console.log('Dinheiro: '+dinheiro);
 }
 
-
 function mascaraMoeda(event) {
     const onlyDigits = event.target.value
       .split("")
@@ -71,6 +70,8 @@ function cadastrarProduto(){
         return false;
     }
 
+    alternaBotaoCadastrarParceiro(true);
+
     $.ajax({
         url: '/novoEmpreendimento/products/ajax_add_product.php',
         type: 'post',
@@ -80,11 +81,11 @@ function cadastrarProduto(){
         processData: false,
         dataType: 'json',
         success: function (resposta) {
+            alternaBotaoCadastrarParceiro(false);
+            alert(resposta.mensagem);
             if(resposta.status === 'ERRO'){
-                alert(resposta.mensagem);
                 return false;
             }
-            alert(resposta.mensagem);
             myProducts(resposta.business);
         }
     })
@@ -97,4 +98,30 @@ function myProducts(idBusiness) {
     }
     
     window.location = '/novoEmpreendimento/user/myProducts.php?business='+idBusiness;
+}
+
+function alternaBotaoCadastrarParceiro(a) {
+    if (a === true) {
+        document.getElementById('botaoCancelar').remove();
+        document.getElementById('botaoCadastrar').remove();
+        document.getElementById('botao').innerHTML = "<div class='col-md' id='botaoCancelar'><button class='btn btn-outline-danger btn-block' type='button' onclick='alertaCancelar()' style='width: 60%; height: 90%;'>Cancelar</button></div><div class='col-md' id='botaoCadastrar'><button class='btn btn-success btn-block' type='button' onclick='cadastrar_parceiro()' style='width: 142%; margin-left: -40%; height: 90%;' disabled><span class='spinner-border spinner-border-md' role='status' aria-hidden='true'></span></button></div><br>";
+    }
+
+
+    if (a === false) {
+        document.getElementById('botaoCancelar').remove();
+        document.getElementById('botaoCadastrar').remove();
+        document.getElementById('botao').innerHTML = "<div class='col-md' id='botaoCancelar'><button class='btn btn-outline-danger btn-block' type='button' onclick='cancelar()' style='width: 60%; height: 90%;'>Cancelar</button></div><div class='col-md' id='botaoCadastrar'><button class='btn btn-success btn-block' type='button' onclick='cadastrar_parceiro()' style='width: 140%; margin-left: -40%; height: 90%;'>Cadastrar</button></div><br>";
+    }
+}
+
+function cancelar() {
+    if (window.confirm('Realmente deseja cancelar o cadastro?')) {
+        window.location.href = '../index.php';
+    }
+}
+
+function alertaCancelar(){
+    alert('Os dados estao sendo processados. Por favor aguarde');
+    return false;
 }

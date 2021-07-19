@@ -33,6 +33,7 @@ class CardProductsUser extends Card{
                     $id = $value;
                 }
                 $onclick = "onclick=abrirCard('".$id."')";
+                $onclickInativarItem = "onclick=editarItem('".$id."')";
                 $nome = ucwords(mb_strtolower($registros->nome));
                 $descricao = $registros->descricao;
                 $cor = isset($registros->cor) ? $registros->cor : '';
@@ -60,7 +61,7 @@ class CardProductsUser extends Card{
                                         ."<p><font class='card-font-valor'>$valor &nbsp;</font><font class='card-font-promocao'> $porcPromocao% OFF</font></p>"
                                         ."<div class='d-flex justify-content-between align-items-center'>"
                                         ."<small class='color-vermelho'>$tipo</small>"
-                                        ."<i class='fas fa-edit' style='cursor:pointer;'></i>"
+                                        ."<i class='far fa-trash-alt' style='cursor:pointer; color:red' $onclickInativarItem></i>"
                                         ."</div>"
                                     ."</div>"
                                 ."</div>"

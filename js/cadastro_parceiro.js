@@ -193,7 +193,7 @@ function cancelar() {
 }
 
 function alertaCancelar(){
-    alert('Os dados estaos sendo processados. Por favor aguarde');
+    alert('Os dados estao sendo processados. Por favor aguarde');
     return false;
 }
 
