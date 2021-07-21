@@ -140,7 +140,6 @@ try {
                     </div>
                 </div><br>
                 
-
                 <div id="botao" class="row g-2">
                     <div class="col-md-12 col-lg-4" id="botaoCancelar">
                         <button class="btn btn-outline-danger btn-block" type="button" onclick="cancelar()">Cancelar</button>
@@ -149,7 +148,7 @@ try {
                         <button class="btn btn-success btn-block" type="button" onclick="cadastrarProduto()">Cadastrar</button>
                     </div>
                 </div>
-
+                
                 <input type="hidden" id="uf" name="uf">
                 <input type="hidden" id="ibge" name="ibge">
             </form>

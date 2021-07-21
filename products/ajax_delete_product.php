@@ -5,18 +5,15 @@ if(!isset($_SESSION)){
 }
 
 try {
-    $dados = array(
-        'idProduto' => isset($_POST['idProduto']) ? filter_input(INPUT_POST, 'idProduto', FILTER_SANITIZE_STRING) : ''
-    );
-
+    $idProduto = isset($_POST['idProduto']) ? filter_input(INPUT_POST, 'idProduto', FILTER_SANITIZE_STRING) : '';
     $classeProduct = new Product;
-    $retornoCadastro = $classeProduct->cadastrarProdutos($dados);
-    if($retornoCadastro === false){
+    $retornoInativacao = $classeProduct->inativarProduto($idProduto);
+    if($retornoInativacao === false){
         throw new Exception($classeProduct->mensagem);
     }
     $arrayRetorno = array(
         'status' => 'SUCESSO',
-        'mensagem' => 'Produto cadastro com sucesso',
+        'mensagem' => 'Produto inativado com sucesso',
         'business' => $_SESSION['id']
     );
     echo json_encode($arrayRetorno);
