@@ -33,7 +33,7 @@ class CardProductsUser extends Card{
                     $id = $value;
                 }
                 $onclick = "onclick=abrirCard('".$id."')";
-                $onclickInativarItem = "onclick=editarItem('".$id."')";
+                $onclickInativarItem = "onclick=inativarItem('".$id."')";
                 $nome = ucwords(mb_strtolower($registros->nome));
                 $descricao = $registros->descricao;
                 $cor = isset($registros->cor) ? $registros->cor : '';
