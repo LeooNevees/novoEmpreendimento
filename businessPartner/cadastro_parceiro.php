@@ -14,7 +14,7 @@ include '/var/www/html/novoEmpreendimento/sistema.php';
     <body>
     <div class="fundo1">
             <div class="formularioCadastroPn">
-                <form>
+                <form id="myForm">
                     <div class="col-12">
                         <a href="#" class="logo"><img src="/novoEmpreendimento/img/temp.png" class="img"> Criar a sua conta no <font style=" color: #DF0101;">Ipeças</font></a>
                     </div>
@@ -62,7 +62,7 @@ include '/var/www/html/novoEmpreendimento/sistema.php';
                     <div class="row">
                         <div class="col-md-12 col-lg-6">
                             <div class="form-floating">
-                                <select class="form-select" id="sexo" aria-label="Floating label select example">
+                                <select class="form-select" id="sexo" name="sexo" aria-label="Floating label select example">
                                     <option value ="" selected>Selecione o sexo</option>
                                     <option value="M">Masculino</option>
                                     <option value="F">Feminimo</option>
@@ -125,6 +125,15 @@ include '/var/www/html/novoEmpreendimento/sistema.php';
                         </div>
                     </div>
 
+                    <div class="row">
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label for="formFileSm" class="form-label">Selecionar Foto Perfil (png, jpeg ou jpg)</label>
+                            <input class="form-control form-control-sm" id="imagens_parceiro" name="imagens_parceiro" type="file">
+                        </div>
+                    </div>
+                </div><br>
+
                     <div id="botao" class="row g-2">
                         <div class="col-md-12 col-lg-4" id="botaoCancelar">
                             <button class="btn btn-outline-danger btn-block" type="button" onclick="cancelar()">Cancelar</button>
@@ -133,7 +142,6 @@ include '/var/www/html/novoEmpreendimento/sistema.php';
                             <button class="btn btn-success btn-block" type="button" onclick="cadastrar_parceiro()">Cadastrar</button>
                         </div>
                     </div>
-
 
                     <input type="hidden" id="uf" name="uf">
                     <input type="hidden" id="ibge" name="ibge">
