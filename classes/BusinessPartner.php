@@ -1,6 +1,8 @@
 <?php
 
 include_once 'Xmongo.php';
+include_once 'Login.php';
+
 
 /**
  * Classe criada para a gestao dos Parceiros de Negocios
@@ -195,6 +197,7 @@ class BusinessPartner {
                     'data_cadastro' => date('Y-m-d H:i:s')
                 )
             );
+
             $retornoCadastro = $conexao->requisitar($requisicao);
             if ($retornoCadastro === false) {
                 throw new Exception($conexao->getMensagem());
@@ -203,11 +206,67 @@ class BusinessPartner {
             if ($conexao->getAfetados() < 1) {
                 throw new Exception('Problema ao cadastar o parceiro. Por favor refaça o procedimento');
             }
-            
+
+            $classeLogin = new Login;
+            $retLogin = $classeLogin->validarLogin($this->getEmail(), $this->getSenha());
+            if($retLogin === false){
+                throw new Exception('Erro ao validar o usuário. Por favor faça o Login manualmente');
+            }
+
+            $retUpload = $this->uploadImagem();
+            if($retUpload === false){
+                throw new Exception('Erro ao fazer o Upload da Imagem. Faça o Login e tente incluir manualmente');
+            }
+
+            if($retUpload != null){
+                $newRequisicao = array(
+                    'tabela' => 'parceiroNegocio',
+                    'acao' => 'atualizar',
+                    '_id' => $_SESSION['id'],
+                    'dados' => array(
+                        'foto' => $retUpload
+                    )
+                );
+                $retNew = $conexao->requisitar($newRequisicao);
+                if ($retNew === false) {
+                    throw new Exception($conexao->getMensagem());
+                }
+    
+                if ($conexao->getAfetados() < 1) {
+                    throw new Exception('Problema ao cadastar o parceiro. Por favor refaça o procedimento');
+                }
+            }          
+
             $this->setMensagem('Parceiro cadastrado com sucesso');
             return true;
         } catch (Exception $ex) {
             $this->setMensagem($ex->getMessage());
+            return false;
+        }
+    }
+
+    private function uploadImagem(){
+        try {
+            if(empty($_FILES['imagens_parceiro']['name'])){
+                return null;
+            }
+            $arrayRetorno = [];
+            $pasta = '/var/www/html/novoEmpreendimento/files/'.$_SESSION['id'].'/';
+            if (!file_exists($pasta)){
+                mkdir($pasta, 0777);
+            }
+
+            $nomeArquivo = $_FILES['imagens_parceiro']['name'];
+            $tmpArquivo = $_FILES['imagens_parceiro']['tmp_name'];
+            $novoNome = date('YmdHis').'.'.pathinfo($nomeArquivo, PATHINFO_EXTENSION);
+
+            if(!move_uploaded_file($tmpArquivo, $pasta.$novoNome)){
+                throw new Exception('Erro ao fazer o Upload da imagem: '.$nomeArquivo.'. Por favor, refaça o procedimento');
+            }
+
+            return substr($pasta, 13).$novoNome;
+        } catch (Exception $ex) {
+            $this->mensagem = $ex->getMessage();
             return false;
         }
     }

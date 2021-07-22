@@ -127,13 +127,11 @@ class Login {
             $this->setSenha($senha);
 
             $retorno = $this->corrigeAcesso();
-
             if ($retorno === false) {
                 throw new Exception($this->getMensagem());
             }
 
             $retornoAcessoBanco = $this->validarAcessoBanco();
-
             if ($retornoAcessoBanco === false) {
                 throw new Exception($this->getMensagem());
             }
@@ -143,7 +141,6 @@ class Login {
             }
 
             $retornoSession = $this->DadosSession();
-
             if ($retornoSession === false) {
                 throw new Exception($this->getMensagem());
             }

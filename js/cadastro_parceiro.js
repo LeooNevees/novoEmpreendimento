@@ -155,22 +155,10 @@ function cadastrar_parceiro() {
     $.ajax({
         url: 'ajax_cadastrar_parceiro.php',
         type: 'post',
-        data: {
-            'nomeCompleto': document.getElementById('nomeCompleto').value,
-            'nomeFantasia': document.getElementById('nomeFantasia').value,
-            'email': document.getElementById('email').value,
-            'senha': document.getElementById('senha').value,
-            'confSenha': document.getElementById('confSenha').value,
-            'sexo': document.getElementById('sexo').value,
-            'documento': document.getElementById('documento').value,
-            'cep': document.getElementById('cep').value,
-            'telefone': document.getElementById('telefone').value,
-            'rua': document.getElementById('rua').value,
-            'numEndereco': document.getElementById('numEndereco').value,
-            'bairro': document.getElementById('bairro').value,
-            'cidade': document.getElementById('cidade').value,
-            'uf': document.getElementById('uf').value
-        },
+        data: new FormData($('#myForm')[0]),
+        cache: false,
+        contentType: false,
+        processData: false,
         dataType: 'json',
         success: function (resposta) {
             alternaBotaoCadastrarParceiro(false);
@@ -178,7 +166,7 @@ function cadastrar_parceiro() {
             alert(resposta.mensagem);
             
             if (resposta.status == 'SUCESSO') {
-                window.location.href = '/novoEmpreendimento/login.php';
+                window.location.href = '/novoEmpreendimento/index.php';
             }
         }
     })
