@@ -38,5 +38,5 @@ function efetuarCompra(idProduto) {
 }
 
 function adicionarCarrinho(idProduto) {
-    alert('Entrou no Adicionar Carrinho para o produto '+idProduto);
+    alert('Adicionado Produto ao carrinho');
 }

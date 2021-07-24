@@ -21,6 +21,8 @@ include_once '/var/www/html/novoEmpreendimento/classes/SingleBusinessPartner.php
 </head>
 
     <body class="cor-body">
+        <input type="hidden" id="id_produto" name="id_produto" value="<?php echo !empty($produto) ? $produto : '' ?>">
+        <input type="hidden" id="id_parceiro" name="id_parceiro" value="<?php echo !empty($parceiroNegocio) ? $parceiroNegocio : '' ?>">
         <?php
             try {
                 if (!(include __DIR__ . '/../navbar.php')) {
@@ -55,6 +57,43 @@ include_once '/var/www/html/novoEmpreendimento/classes/SingleBusinessPartner.php
                 echo 'Erro: '.$ex->getMessage().'. Por favor refaça o procedimento';
                 return false;
             }       
-        ?>
+        ?> 
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Avaliação Vendedor</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="recipient-name" class="col-form-label">Título: </label>
+                                <input type="text" class="form-control" id="titulo_avaliacao" name="titulo_avaliacao">
+                            </div>
+                            <div class="mb-3">
+                                <label class="col-form-label">Estrelas: </label>
+                                <select id="estrelas_avaliacao" class="form-control">
+                                    <option value="">Selecione</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="message-text" class="col-form-label">Descrição:</label>
+                                <textarea class="form-control" id="descricao_avaliacao" name="descricao_avaliacao"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="return cadastrarAvaliacao()">Enviar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </body>
+   
 </html>
