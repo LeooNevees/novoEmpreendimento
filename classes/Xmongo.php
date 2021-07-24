@@ -110,10 +110,22 @@ class Xmongo {
                         throw new Exception('Não possui parâmetros para atualizar');
                     }
 
+                    foreach ($filter as $key => $value) {
+                        if(is_array($value)){
+                            foreach ($value as $chave => $valor) {
+                                unset($filter);
+                                $filter = array(
+                                    "$key.$chave" => $valor
+                                );
+                            }
+                        }
+                    }
+
                     $this->setAfetados(0);
                     $cursor = $collection->updateOne(
                         [$keyId => $valueId],
-                        ['$set' => $filter]
+                        ['$set' => $filter],
+                        ['upsert' => true]
                     );
                     $resultado = $cursor->getModifiedCount();
                     if (empty($resultado) || $resultado < 1) {
