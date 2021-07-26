@@ -45,7 +45,6 @@ try {
         }
     }
     
-
     $retornoStatus = json_encode(array(
         'status' => 'SUCESSO',
         'mensagem' => 'Avaliação cadastrada com sucesso'

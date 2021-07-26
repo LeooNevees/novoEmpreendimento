@@ -35,7 +35,7 @@ try {
             return false;
         }?>
         <div class="formularioCadastroPn">
-            <form id="myForm">
+            <form id="myForm" name="myForm">
                 <div class="col-12">
                     <a href="#" class="logo"><img src="/novoEmpreendimento/img/temp.png" class="img"> Cadastrar Produto <font style=" color: #DF0101;">Ipeças</font></a>
                 </div>

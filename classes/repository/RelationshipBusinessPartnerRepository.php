@@ -75,5 +75,33 @@ class RelationshipBusinessPartnerRepository{
             $this->mensagem = $ex->getMessage();
             return false;
         }
-    }    
+    }
+
+        /**
+     * $dados Array
+     * return Object || Boolean 
+     */
+    public function insert($dados){
+        try {
+            if(empty($dados) || !count($dados)){
+                throw new Exception('Parâmetros inválidos para a função insert');
+            }
+
+            $requisicao = array(
+                'tabela' => 'relacaoParceiroNegocio',
+                'acao' => 'cadastrar',
+                'dados' => $dados
+            );
+    
+            $retorno = $this->conexao->requisitar($requisicao);
+            if ($retorno === false) {
+                throw new Exception($this->conexao->getMensagem());
+            }
+            $this->afetados = $this->conexao->getAfetados();
+            return $this->conexao->getMensagem();
+        } catch (Exception $ex) {
+            $this->mensagem = $ex->getMessage();
+            return false;
+        }
+    }
 }
