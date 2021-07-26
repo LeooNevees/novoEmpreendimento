@@ -7,7 +7,7 @@ if(!isset($_SESSION)){
 
 //Produto
 $idProduto = isset($_POST['id_produto']) ? filter_input(INPUT_POST, 'id_produto', FILTER_SANITIZE_STRING) : '';
-$tituloProduto = isset($_POST['titulo_vendedor']) ? mb_strtoupper(filter_input(INPUT_POST, 'titulo_vendedor', FILTER_SANITIZE_STRING)) : '';
+$tituloProduto = isset($_POST['titulo_avaliacao']) ? mb_strtoupper(filter_input(INPUT_POST, 'titulo_avaliacao', FILTER_SANITIZE_STRING)) : '';
 $mensagemProduto = isset($_POST['descricao_avaliacao']) ? mb_strtoupper(filter_input(INPUT_POST, 'descricao_avaliacao', FILTER_SANITIZE_STRING)) : '';
 $estrelasProduto = isset($_POST['estrelas_avaliacao']) ? filter_input(INPUT_POST, 'estrelas_avaliacao', FILTER_SANITIZE_NUMBER_INT) : '';
 
