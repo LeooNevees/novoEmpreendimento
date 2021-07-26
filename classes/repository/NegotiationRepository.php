@@ -9,6 +9,7 @@ include_once '/var/www/html/novoEmpreendimento/classes/Xmongo.php';
 class NegotiationRepository{
     public $encontrados = 0;
     public $mensagem;
+    public $id;
 
     function __construct() {
         $this->conexao = new Xmongo();
@@ -64,7 +65,8 @@ class NegotiationRepository{
             if ($retorno === false) {
                 throw new Exception($this->conexao->getMensagem());
             }
-
+            
+            $this->id = $this->conexao->getIdInserido();
             return $this->conexao->getMensagem();
         } catch (Exception $ex) {
             $this->mensagem = $ex->getMessage();

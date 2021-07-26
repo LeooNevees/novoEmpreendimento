@@ -10,6 +10,7 @@ class Xmongo {
     private $conexao;     // Handle da conexao
     private $auto_inc;      //Ultimo codigo incremental atribuido ao valor inserido
     private $encontrados;    // Numero de registros encontrados na pesquisa
+    private $idInserido;    //Número do Id retornado no insert
     private $afetados;    // Numero de registros afetados nos procedimentos
     private $mensagem;      // Ultima mensagem de erro para exibicao
 
@@ -83,6 +84,8 @@ class Xmongo {
                     }
 
                     $cursor = $collection->insertOne($filter);
+                    $auxId = (array) $cursor->getInsertedId();
+                    $idRetornadoInsert = count($auxId) ? $auxId['oid'] : '';
 
                     $resultado = $cursor->getInsertedCount();
 
@@ -91,6 +94,7 @@ class Xmongo {
                     }
 
                     $this->setAfetados(+1);
+                    $this->setIdInserido($idRetornadoInsert);
                     return true;
                     break;
                 case 'ATUALIZAR':
@@ -165,6 +169,10 @@ class Xmongo {
         return $this->mensagem;
     }
 
+    public function getIdInserido() {
+        return $this->idInserido;
+    }
+
     private function setConexao($conexao) {
         $this->conexao = $conexao;
     }
@@ -183,6 +191,10 @@ class Xmongo {
 
     private function setMensagem($mensagem) {
         $this->mensagem = $mensagem;
+    }
+
+    private function setIdInserido($id) {
+        $this->idInserido = $id;
     }
 
 }

@@ -40,6 +40,7 @@ function efetuarCompra(idProduto) {
                 }
             }
             alert(resposta.mensagem);
+            $("#id_negociacao").val(resposta.idInserido);
 
             if(!confirm('Deseja avaliar o Produto? ')){
                 window.location.reload();
@@ -54,31 +55,35 @@ function adicionarCarrinho(idProduto) {
 }
 
 function cadastrarAvaliacao() {
-    if($("#titulo_avaliacao").val() == ''){
-        alert('Necessário informar um título');
+    var erro = false;
+    var arrayValidar = ['titulo_avaliacao', 'estrelas_avaliacao', 'mensagem_avaliacao'];
+    arrayValidar.forEach(function(input) {
+        if(erro == false && $("#"+input).val() == ''){
+            alert('Necessário informar Título, Estrelas e Descrição para avaliar o Produto');
+            erro = true;
+            return false;
+        }
+    });
+    if(erro == true){
         return false;
+    }
+    
+    if($("#titulo_vendedor").val() != '' || $("#atendimento").val() != '' || $("#tempo_entrega").val() != '' || $("#observacao").val() != ''){
+        if($("#titulo_vendedor").val() == '' || $("#atendimento").val() == '' || $("#tempo_entrega").val() == ''){
+            alert('Necessário informar Título, Atendimento e Tempo Entrega para avaliar o Vendedor');
+            return false;
+        }
     }
 
-    if($("#estrelas_avaliacao").val() == ''){
-        alert('Necessário selecionar pelo menos uma Estrela');
-        return false;
-    }
-
-    if($("#mensagem_avaliacao").val() == ''){
-        alert('Por favor insira uma mensagem');
-        return false;
-    }
+    var teste = new FormData($('#avaliacoes')[0]);
 
     $.ajax({
         url: '/novoEmpreendimento/evaluation/ajax_evaluation.php',
         type: 'post',
-        data: {
-            'tipo': 'PRODUTO',
-            'id_produto': $("#id_produto").val(),
-            'titulo': $("#titulo_avaliacao").val(),
-            'estrelas': $("#estrelas_avaliacao").val(),
-            'descricao_avaliacao': $("#descricao_avaliacao").val()
-        },
+        data: new FormData($('#myForm')[0]),
+        cache: false,
+        contentType: false,
+        processData: false,
         dataType: 'json',
         success: function (resposta) {
             alert(resposta.mensagem);

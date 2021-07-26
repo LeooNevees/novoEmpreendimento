@@ -113,6 +113,10 @@ body{
     color: goldenrod;
 }
 
+.negrito{
+    font-weight: bold;
+}
+
 .cor-letra-prata{
     color: rgb(161, 159, 159);
 }

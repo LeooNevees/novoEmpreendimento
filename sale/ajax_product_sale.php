@@ -20,7 +20,8 @@ try {
     
     $return = array(
         'status' => 0,
-        'mensagem' => utf8_encode('Compra Realizada com sucesso. Acompanhe o status da entrega na sua plataforma')
+        'mensagem' => utf8_encode('Compra Realizada com sucesso. Acompanhe o status da entrega na sua plataforma'),
+        'idInserido' => $retornoSale
     );
     echo json_encode($return);
 } catch (Exception $ex) {

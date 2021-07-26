@@ -48,7 +48,7 @@ class Sale{
                 throw new Exception("Erro ao inserir Negociacao na funcao Gerar Compra Produto para o Id Produto ".$idProduto);
             }
 
-            return true;
+            return $retornoNegociacao;
         } catch (Exception $ex) {
             $this->mensagem = $ex->getMessage();
             return false;
@@ -168,7 +168,7 @@ class Sale{
             if($retornoInsert === false){
                 throw new Exception('Erro ao Inserir Negociacao para o produto '.$dados['id_produto']);
             }
-            return true;
+            return $classeNegotiation->id;
         } catch (Exception $ex) {
             $this->mensagem = $ex->getMessage();
             return false;
