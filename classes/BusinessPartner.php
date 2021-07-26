@@ -1,7 +1,8 @@
 <?php
 
-include_once 'Xmongo.php';
 include_once 'Login.php';
+include_once '/var/www/html/novoEmpreendimento/classes/repository/BusinessPartnerRepository.php';
+include_once '/var/www/html/novoEmpreendimento/classes/repository/RelationshipBusinessPartnerRepository.php';
 
 
 /**
@@ -29,11 +30,90 @@ class BusinessPartner {
     private $alterados;
     private $cadastrados;
     private $mensagem;
+    private $classeParceiro;
 
     public function __construct(){
         $this->encontrados = 0;
         $this->alterados = 0;
         $this->cadastrados = 0;
+        $this->classeParceiro = new BusinessPartnerRepository;
+    }
+    
+    public function cadastrarParceiro($array) {
+        try {
+            if (!is_array($array)) {
+                throw new Exception('Esperado informações via Array. Por favor refaça o procedimento');
+            }
+
+            $retorno = $this->corrigeDadosParceiro($array);
+
+            if ($retorno === false) {
+                return false;
+            }
+
+            $retornoValidacao = $this->validarDadosParceiro('CADASTRAR');
+
+            if ($retornoValidacao === false) {
+                return false;
+            }
+
+            $params = array(
+                'cpf_cnpj' => $this->getCpfcnpj()
+            );
+            $retornoBanco = $this->classeParceiro->getBusinessPartner($params);
+            if ($this->classeParceiro->encontrados > 0) {
+                throw new Exception('CPF/CNPJ já sendo utilizado');
+            }
+            
+            $buscaEmail = array(
+                'login' => $this->getEmail()
+            );
+            $retornoLogin = $this->classeParceiro->getBusinessPartner($buscaEmail);
+            if ($this->classeParceiro->encontrados > 0) {
+                throw new Exception('E-mail já sendo utilizado');
+            }
+            
+            $retornoEfetivar = $this->efetivarCadastro();
+            if($retornoEfetivar === false){
+                throw new Exception($this->mensagem);
+            }
+
+            $classeLogin = new Login;
+            $retLogin = $classeLogin->validarLogin($this->getEmail(), $this->getSenha());
+            if($retLogin === false){
+                throw new Exception('Erro ao validar o usuário. Por favor faça o Login manualmente');
+            }
+
+            $retUpload = $this->uploadImagem();
+            if($retUpload === false){
+                throw new Exception('Erro ao fazer o Upload da Imagem. Faça o Login e tente incluir manualmente');
+            }
+
+            if($retUpload != null){
+                $newRequisicao = array(
+                    'foto' => $retUpload
+                );
+                $retNew = $this->classeParceiro->update($_SESSION['id'], $newRequisicao);
+                if ($retNew === false) {
+                    throw new Exception($this->classeParceiro->mensagem);
+                }
+    
+                if ($this->classeParceiro->afetados < 1) {
+                    throw new Exception('Problema ao cadastar o parceiro. Por favor refaça o procedimento');
+                }
+            }
+            
+            $retornoRelacaoParceiro = $this->cadastrarRelacaoParceiro();
+            if($retornoRelacaoParceiro === false){
+                throw new Exception($this->mensagem);
+            }
+
+            $this->setMensagem('Parceiro cadastrado com sucesso');
+            return true;
+        } catch (Exception $ex) {
+            $this->setMensagem($ex->getMessage());
+            return false;
+        }
     }
 
     private function corrigeDadosParceiro($array) {
@@ -126,121 +206,43 @@ class BusinessPartner {
             return false;
         }
     }
-    
-    public function cadastrarParceiro($array) {
+
+    private function efetivarCadastro(){
         try {
-            if (!is_array($array)) {
-                throw new Exception('Esperado informações via Array. Por favor refaça o procedimento');
-            }
-
-            $retorno = $this->corrigeDadosParceiro($array);
-
-            if ($retorno === false) {
-                return false;
-            }
-
-            $retornoValidacao = $this->validarDadosParceiro('CADASTRAR');
-
-            if ($retornoValidacao === false) {
-                return false;
-            }
-
-            $conexao = new Xmongo();
-            $requisicao = array(
-                'tabela' => 'parceiroNegocio',
-                'acao' => 'pesquisar',
-                'dados' => array(
-                    'cpf_cnpj' => $this->getCpfcnpj()
-                )
+            $dados = array(
+                'nome_completo' => $this->getNomeCompleto(),
+                'nome_fantasia' => $this->getNomeFantasia(),
+                'email' => $this->getEmail(),
+                'sexo' => $this->getSexo(),
+                'cpf_cnpj' => $this->getCpfcnpj(),
+                'telefone' => $this->getTelefone(),
+                'cep' => $this->getCep(),
+                'rua' => $this->getRua(),
+                'numero' => $this->getNumero(),
+                'bairro' => $this->getBairro(),
+                'cidade' => $this->getCidade(),
+                'uf' => $this->getUf(),
+                'login' => $this->getEmail(),
+                'senha' => $this->getSenha(),
+                'situacao' => 'A',
+                'setor' => '2',
+                'descricao_setor' => 'ACESSO CLIENTE',
+                'funcao' => '20',
+                'descricao_funcao' => 'MERCADO',
+                'data_cadastro' => date('Y-m-d H:i:s')
             );
-            $retornoBanco = $conexao->requisitar($requisicao);
-            if ($conexao->getEncontrados() > 0) {
-                throw new Exception('CPF/CNPJ já sendo utilizado');
-            }
             
-            $requisicaoLogin = array(
-                'tabela' => 'parceiroNegocio',
-                'acao' => 'pesquisar',
-                'dados' => array(
-                    'login' => $this->getEmail()
-                )
-            );
-            $retornoLogin = $conexao->requisitar($requisicaoLogin);
-            if ($conexao->getEncontrados() > 0) {
-                throw new Exception('E-mail já sendo utilizado');
-            }
-
-            unset($requisicao);
-            $requisicao = array(
-                'tabela' => 'parceiroNegocio',
-                'acao' => 'cadastrar',
-                'dados' => array(
-                    'nome_completo' => $this->getNomeCompleto(),
-                    'nome_fantasia' => $this->getNomeFantasia(),
-                    'email' => $this->getEmail(),
-                    'sexo' => $this->getSexo(),
-                    'cpf_cnpj' => $this->getCpfcnpj(),
-                    'telefone' => $this->getTelefone(),
-                    'cep' => $this->getCep(),
-                    'rua' => $this->getRua(),
-                    'numero' => $this->getNumero(),
-                    'bairro' => $this->getBairro(),
-                    'cidade' => $this->getCidade(),
-                    'uf' => $this->getUf(),
-                    'login' => $this->getEmail(),
-                    'senha' => $this->getSenha(),
-                    'situacao' => 'A',
-                    'setor' => '2',
-                    'descricao_setor' => 'ACESSO CLIENTE',
-                    'funcao' => '20',
-                    'descricao_funcao' => 'MERCADO',
-                    'data_cadastro' => date('Y-m-d H:i:s')
-                )
-            );
-
-            $retornoCadastro = $conexao->requisitar($requisicao);
+            $retornoCadastro = $this->classeParceiro->insert($dados);
             if ($retornoCadastro === false) {
-                throw new Exception($conexao->getMensagem());
+                throw new Exception($this->classeParceiro->mensagem);
             }
 
-            if ($conexao->getAfetados() < 1) {
+            if ($this->classeParceiro->afetados < 1) {
                 throw new Exception('Problema ao cadastar o parceiro. Por favor refaça o procedimento');
             }
-
-            $classeLogin = new Login;
-            $retLogin = $classeLogin->validarLogin($this->getEmail(), $this->getSenha());
-            if($retLogin === false){
-                throw new Exception('Erro ao validar o usuário. Por favor faça o Login manualmente');
-            }
-
-            $retUpload = $this->uploadImagem();
-            if($retUpload === false){
-                throw new Exception('Erro ao fazer o Upload da Imagem. Faça o Login e tente incluir manualmente');
-            }
-
-            if($retUpload != null){
-                $newRequisicao = array(
-                    'tabela' => 'parceiroNegocio',
-                    'acao' => 'atualizar',
-                    '_id' => $_SESSION['id'],
-                    'dados' => array(
-                        'foto' => $retUpload
-                    )
-                );
-                $retNew = $conexao->requisitar($newRequisicao);
-                if ($retNew === false) {
-                    throw new Exception($conexao->getMensagem());
-                }
-    
-                if ($conexao->getAfetados() < 1) {
-                    throw new Exception('Problema ao cadastar o parceiro. Por favor refaça o procedimento');
-                }
-            }          
-
-            $this->setMensagem('Parceiro cadastrado com sucesso');
             return true;
         } catch (Exception $ex) {
-            $this->setMensagem($ex->getMessage());
+            $this->mensagem = $ex->getMessage();
             return false;
         }
     }
@@ -286,6 +288,36 @@ class BusinessPartner {
             $retornoValidar = $this->validarDadosParceiro('ALTERAR');
         } catch (Exception $ex) {
             $this->setMensagem($ex->getMessage());
+            return false;
+        }
+    }
+
+    private function cadastrarRelacaoParceiro(){
+        try {
+            $dados = array(
+                'id_parceiro' => $this->classeParceiro->idInserido,
+                'nome_completo' => $this->getNomeCompleto(),
+                'nome_fantasia' => $this->getNomeFantasia(),
+                'compras' => 0,
+                'vendas' => 0,
+                'media_entrega' => 0,
+                'media_atendimento' => 0,
+                'classificacao' => 'BRONZE'
+            );
+
+            $classeRelation = new RelationshipBusinessPartnerRepository;
+            $retorno = $classeRelation->insert($dados);
+            if($retorno === false){
+                throw new Exception($classeRelation->mensagem);
+            }
+
+            if($classeRelation->afetados < 1){
+                throw new Exception('Erro ao cadastrar a Relacao Parceiro');
+            }
+
+            return true;
+        } catch (Exception $ex) {
+            $this->mensagem = $ex->getMessage();
             return false;
         }
     }

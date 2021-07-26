@@ -42,6 +42,11 @@ class Evaluation{
                 throw new Exception($this->mensagem);
             }
             
+            $retornoAtualizarMedia = $this->atualizarMedia('PRODUTO', $idProduto);
+            if($retornoAtualizarMedia === false){
+                throw new Exception($this->mensagem);
+            }
+
             return true;
         } catch (Exception $ex) {
             $this->mensagem = $ex->getMessage();
@@ -123,8 +128,12 @@ class Evaluation{
                 throw new Exception($this->mensagem);
             }
             
-            return true;
-            
+            $retornoAtualizarMedia = $this->atualizarMedia('PARCEIRO', $this->idVendedor);
+            if($retornoAtualizarMedia === false){
+                throw new Exception($this->mensagem);
+            }
+
+            return true;            
         } catch (Exception $ex) {
             $this->mensagem = $ex->getMessage();
             return false;
@@ -185,6 +194,75 @@ class Evaluation{
                 throw new Exception('Erro ao tentar inserir a Opinião. Por favor refaça o procedimento');
             }
 
+            return true;
+        } catch (Exception $ex) {
+            $this->mensagem = $ex->getMessage();
+            return false;
+        }
+    }
+
+    private function atualizarMedia(string $tipo, string $id){
+        try {
+            if(empty($tipo) || empty($id)){
+                throw new Exception('Parâmetros inválidos para a função atualizarMedia');
+            }
+
+            switch (true) {
+                case $tipo == 'PARCEIRO':
+                    $classeRelation = new RelationshipBusinessPartnerRepository;
+                    $retornoRelacao = json_decode($classeRelation->getRelationBusiness(['id_parceiro' => $id]));
+                    if($retornoRelacao === false){
+                        throw new Exception($classeRelation->mensagem);
+                    }
+                    if($classeRelation->encontrados < 1){
+                        throw new Exception('Id: '.$id.' não encontrado na tabela Relacao');
+                    }
+                    if(isset($retornoRelacao[0]->avaliacoes_vendas)){
+                        $somaAtendimento = 0;
+                        $somaTempoEntrega = 0;
+                        $contador = 0;
+                        foreach ($retornoRelacao[0]->avaliacoes_vendas as $key => $value) {
+                            $somaAtendimento += $value->atendimento;
+                            $somaTempoEntrega += $value->tempo_entrega;
+                            $contador++;
+                        }
+                    }
+
+                    $dados = array(
+                        'media_entrega' => (float) $somaTempoEntrega/$contador,
+                        'media_atendimento' => (float) $somaAtendimento/$contador
+                    );
+                    $retornoAdd = $classeRelation->updateRelationshipBusiness($id, $dados);
+                    if($retornoAdd === false){
+                        throw new Exception($classeRelation->mensagem);
+                    }
+                    break;
+
+                case $tipo == 'PRODUTO':
+                    $retornoProduto = json_decode($this->classeProduct->getProduct($id));
+                    if($retornoProduto === false){
+                        throw new Exception($this->classeProduct->mensagem);
+                    }
+                    if($this->classeProduct->encontrados < 1){
+                        throw new Exception('Id: '.$id.' não encontrado na tabela Produtos');
+                    }
+                    if(isset($retornoProduto[0]->opinioes)){
+                        $somaEstrela = 0;
+                        $contador = 0;
+                        foreach ($retornoProduto[0]->opinioes as $key => $value) {
+                            $somaEstrela += $value->estrela;
+                            $contador++;
+                        }
+                    }
+                    $retornoAdd = $this->classeProduct->update($id, ['media' => (float) $somaEstrela/$contador]);
+                    if($retornoAdd === false){
+                        throw new Exception($this->classeProduct->mensagem);
+                    }
+                    break;                
+                default:
+                    throw new Exception('Tipo não esperado na função atualizarMedia');
+                    break;
+            }
             return true;
         } catch (Exception $ex) {
             $this->mensagem = $ex->getMessage();
