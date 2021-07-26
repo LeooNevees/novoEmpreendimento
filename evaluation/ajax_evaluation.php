@@ -22,15 +22,29 @@ $observacaoVendedor = isset($_POST['observacao_vendedor']) ? mb_strtoupper(filte
 $classeEvaluation = new Evaluation;
 
 try {
-    $retornoProduto = $classeEvaluation->adicionarAvaliacaoProduto($idProduto, $tituloProduto, $mensagemProduto, $estrelasProduto);
-    if($retornoProduto === false){
-        throw new Exception($classeEvaluation->mensagem);
-    }
+    if(!empty($idProduto) || !empty($tituloProduto) ||  !empty($mensagemProduto) || !empty($estrelasProduto)){
+        if(empty($idProduto) || empty($tituloProduto) || empty($estrelasProduto)){
+            throw new Exception('Para avaliar o Produto é necessário preencher Título, Mensagem e Estrelas');
+        }
 
-    $retornoVendedor = $classeEvaluation->adicionarAvaliacaoVendedor($idNegociacao, $tituloVendedor, $atendimentoVendedor, $tempoEntregaVendedor, $observacaoVendedor);
-    if($retornoVendedor === false){
-        throw new Exception($classeEvaluation->mensagem);
+        $retornoProduto = $classeEvaluation->adicionarAvaliacaoProduto($idProduto, $tituloProduto, $mensagemProduto, $estrelasProduto);
+        if($retornoProduto === false){
+            throw new Exception($classeEvaluation->mensagem);
+        }
     }
+    
+
+    if(!empty($idNegociacao) || !empty($tituloVendedor) ||  !empty($atendimentoVendedor) || !empty($tempoEntregaVendedor) || !empty($observacaoVendedor)){
+        if(empty($idNegociacao) || empty($tituloVendedor) ||  empty($atendimentoVendedor) || empty($tempoEntregaVendedor)){
+            throw new Exception('Para avaliar o Vendedor é necessário preencher Título, Atendimento e Tempo de Entrega');
+        }
+
+        $retornoVendedor = $classeEvaluation->adicionarAvaliacaoVendedor($idNegociacao, $tituloVendedor, $atendimentoVendedor, $tempoEntregaVendedor, $observacaoVendedor);
+        if($retornoVendedor === false){
+            throw new Exception($classeEvaluation->mensagem);
+        }
+    }
+    
 
     $retornoStatus = json_encode(array(
         'status' => 'SUCESSO',
@@ -42,5 +56,5 @@ try {
         'status' => 'ERRO',
         'mensagem' => $ex->getMessage()
     );
-    echo $retorno;
+    echo json_encode($retorno);
 }

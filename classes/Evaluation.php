@@ -24,7 +24,7 @@ class Evaluation{
 
     public function adicionarAvaliacaoProduto(string $idProduto, string $titulo, string $mensagem, int $estrelas){
         try {
-            if(empty($idProduto) || empty($titulo) || empty($mensagem) || empty($estrelas)){
+            if(empty($idProduto) || empty($titulo) || empty($estrelas)){
                 throw new Exception('Parâmetros inválidos para a função adicionarAvaliacaoProduto');
             }
             $retProduto = $this->buscarAvaliacoesProduto($idProduto);
@@ -69,7 +69,7 @@ class Evaluation{
 
     private function adicionarOpiniao(string $idProduto, int $contadorOpinioes, string $titulo, string $mensagem, int $estrelas){
         try {
-            if(empty($idProduto) || empty($contadorOpinioes) || empty($titulo) || empty($mensagem) || empty($estrelas)){
+            if(empty($idProduto) || empty($contadorOpinioes) || empty($titulo) || empty($estrelas)){
                 throw new Exception('Parâmetros inválidos para a função adicionarOpiniao');
             }
 
@@ -104,7 +104,7 @@ class Evaluation{
 
     public function adicionarAvaliacaoVendedor(string $idNegociacao, string $titulo, int $atendimento, int $tempoEntrega, string $observacao){
         try {
-            if(empty($titulo) || empty($atendimento) || empty($tempoEntrega) || empty($observacao || is_null($this->idVendedor) || empty($idNegociacao))){
+            if(empty($titulo) || empty($atendimento) || empty($tempoEntrega) || is_null($this->idVendedor) || empty($idNegociacao)){
                 throw new Exception('Parâmetros inválidos para a função adicionarAvaliacaoVendedor');
             }
             
@@ -156,7 +156,7 @@ class Evaluation{
 
     private function adicionarOpiniaoVendedor(string $idNegociacao, int $atendimento, int $tempoEntrega, string $observacao, string $titulo, int $contadorAvaliacoes, string $idVendedor){
         try {
-            if(empty($idNegociacao) || empty($atendimento) || empty($tempoEntrega) || empty($observacao) || empty($titulo) || empty($contadorAvaliacoes)){
+            if(empty($idNegociacao) || empty($atendimento) || empty($tempoEntrega) || empty($titulo) || empty($contadorAvaliacoes)){
                 throw new Exception('Parâmetros inválidos para a função adicionarOpiniaoVendedor');
             }
 
