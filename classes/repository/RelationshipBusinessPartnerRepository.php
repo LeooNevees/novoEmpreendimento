@@ -53,7 +53,7 @@ class RelationshipBusinessPartnerRepository{
     public function updateRelationshipBusiness($id, $dados){
         try {
             if(empty($id) || !count($dados)){
-                throw new Exception('Parâmetros inválidos na função Update Products');
+                throw new Exception('Parâmetros inválidos na função UpdateRelationshipBusiness');
             }
             $requisicao = array(
                 'tabela' => 'relacaoParceiroNegocio',
