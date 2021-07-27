@@ -18,8 +18,26 @@ class Card {
         try {
             $retorno = $this->buscarDados($dados, $limite);
             
-            if($retorno === false || $this->getEncontrados() < 1){
+            if($retorno === false){
                 throw new Exception($this->getMensagem());
+            }
+
+            if($this->getEncontrados() < 1){
+                $retorno = "<div class='album py-5 bg-index'>"
+                                ."<h4 class='text-center card-titulo'>Nenhum Produto Encontrado</h4>"
+                                ."<div class='container'>"
+                                    ."<div class='row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3'>"
+                                    ."<div class='col'>"
+                                    ."<div class='card shadow-sm card-max' style='widht:100%; height:100%; cursor:pointer;' onclick='adicionar_produto()'>"
+                                        ."<img src='/novoEmpreendimento/img/mais.png' class='dist-adicionar'>"
+                                        ."<span class='text-center espaco-5' style='color:green; font-weight:bold;'>Adicionar Produto</span>"
+                                    ."</div>"
+                                ."</div>"
+                                    ."</div>"
+                                ."</div>"
+                            ."</div>";
+                $this->setMensagem($retorno);
+                return true;
             }
 
             $retornoEstrutura = $this->gerarDadosEstrutura();
@@ -65,7 +83,7 @@ class Card {
             }
 
             if($repository->encontrados < 1){
-                throw new Exception('Nenhum registro encontrado');
+                return null;
             }
             
             $this->setMensagem($retorno);

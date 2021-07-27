@@ -54,7 +54,7 @@ class CardProductsUser extends Card{
                     $valorSemDesconto = isset($registros->valor) ? 'R$ '.number_format((($registros->valor/100*$porcPromocao)+$registros->valor), 2, ',', '.') : '';
                     $array[] = "<div class='col'>"
                                 ."<div class='card shadow-sm card-max'>"
-                                    ."<img class='card-max' src='$imagem'>"
+                                    ."<img class='tamanho-imagem-card' src='$imagem'>"
                                     ."<div class='card-footer text-muted'>"
                                         ."<p class='card-text'>$nome</p>"
                                         ."<p class='card-font-valor-desconto'>De $valorSemDesconto por</p>"

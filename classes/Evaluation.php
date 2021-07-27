@@ -227,10 +227,19 @@ class Evaluation{
                             $contador++;
                         }
                     }
-
+                    $mediaEntrega = (float) $somaTempoEntrega/$contador;
+                    $mediaAtendimento = (float) $somaAtendimento/$contador;
+                    $classificacao = 'BRONZE';
+                    if(($mediaEntrega + $mediaAtendimento)/2 >= 3){
+                        $classificacao = 'PRATA';
+                        if(($mediaEntrega + $mediaAtendimento)/2 >= 4){
+                            $classificacao = 'OURO'; 
+                        }
+                    }
                     $dados = array(
-                        'media_entrega' => (float) $somaTempoEntrega/$contador,
-                        'media_atendimento' => (float) $somaAtendimento/$contador
+                        'media_entrega' => (float) $mediaEntrega,
+                        'media_atendimento' => (float) $mediaAtendimento,
+                        'classificacao' => $classificacao
                     );
                     $retornoAdd = $classeRelation->updateRelationshipBusiness($id, $dados);
                     if($retornoAdd === false){

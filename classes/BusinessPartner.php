@@ -124,7 +124,7 @@ class BusinessPartner {
 
             $v_array = [];
 
-            $v_array = array_map('mb_strtoupper', array_map('utf8_encode', array_map('trim', $array)));
+            $v_array = array_map('mb_strtoupper', array_map('trim', $array));
 
 
             foreach ($v_array as $key => $value) {

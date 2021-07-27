@@ -132,8 +132,9 @@ class Xmongo {
                         ['upsert' => true]
                     );
                     $resultado = $cursor->getModifiedCount();
-                    if (empty($resultado) || $resultado < 1) {
-                        throw new Exception('Erro ao atualizar a quantidade do produto. Por favor refaça o procedimento');
+                    if (empty($resultado) || $resultado === false) {
+                        trigger_error('Erro ao tentar atualizar a tabela: '.$tabela. ' utilizando a query: '.print_r($filter,true));
+                        throw new Exception('Erro ao atualizar. Por favor refaça o procedimento');
                     }
 
                     $this->setAfetados($resultado);

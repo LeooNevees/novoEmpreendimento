@@ -137,7 +137,7 @@ class SingleProduct{
 							continue;
 						}
 						$auxButton[] = "<button class='bg-vermelho' type='button' data-bs-target='#carouselExampleIndicators' data-bs-slide-to='$contadorButton' aria-label='Slide $contadorButton'></button>";
-						$auxDiv[] = "<div class='carousel-item width-100 height-100'><img src='$value' class='d-block w-100' alt='...'></div>";
+						$auxDiv[] = "<div class='carousel-item width-100 height-100'><img src='$value' class='d-block w-100 width-100 height-100' alt='...'></div>";
 						$contadorButton++;
 					}
 				}

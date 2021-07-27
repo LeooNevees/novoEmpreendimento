@@ -14,18 +14,16 @@ class GroupsRepository{
         $this->conexao = new Xmongo();
     }
 
-    /**
-     * $dados = Array (ex: '_id' => new MongoDB\BSON\ObjectID($idProduto))
-     */
-    public function getGroups($dados){
+    public function getGroups($dados, $limite = 10){
         try {
-            if(empty($dados) || !count($dados)){
-                throw new Exception('Parâmetros inválidos');
+            if(!count($dados) || empty($limite)){
+                throw new Exception('Parâmetros inválidos para a função getGroupsLimit');
             }
             $requisicao = array(
                 'tabela' => 'grupos',
                 'acao' => 'pesquisar',
-                'dados' => $dados
+                'dados' => $dados,
+                'limit' => $limite
             );
     
             $retorno = $this->conexao->requisitar($requisicao);

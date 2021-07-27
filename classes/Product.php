@@ -156,7 +156,8 @@ class Product {
                 'visualizacao' => 0,
                 'grupo' => $params['grupo'],
                 'id_vendedor' => $_SESSION['id'],
-                'imagens' => $retornoUpload
+                'imagens' => $retornoUpload,
+                'media' => 0
             );
             $classeProduto = new ProductsRepository;
             $retornoCadastro = $classeProduto->insertProduct($dados);
@@ -189,7 +190,7 @@ class Product {
             $tmpArquivo = $_FILES['imagens_produto']['tmp_name'];
 
             for ($contador=0; $contador < count($nomeArquivo); $contador++) {     
-                $novoNome = date('YmdHis').'.'.pathinfo($nomeArquivo[$contador], PATHINFO_EXTENSION);
+                $novoNome = date('YmdHis').$contador.'.'.pathinfo($nomeArquivo[$contador], PATHINFO_EXTENSION);
 
                 if(!move_uploaded_file($tmpArquivo[$contador], $pasta.$novoNome)){
                     throw new Exception('Erro ao fazer o Upload da imagem: '.$nomeArquivo[$contador].'. Por favor, refaça o procedimento');

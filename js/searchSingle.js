@@ -75,8 +75,6 @@ function cadastrarAvaliacao() {
         }
     }
 
-    var teste = new FormData($('#avaliacoes')[0]);
-
     $.ajax({
         url: '/novoEmpreendimento/evaluation/ajax_evaluation.php',
         type: 'post',
