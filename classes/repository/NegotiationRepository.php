@@ -19,7 +19,7 @@ class NegotiationRepository{
      * $dados Array
      * return Object || Boolean 
      */
-    public function getNegotiation(){
+    public function getNegotiation($dados, $limit = 3){
         try {
             if(empty($dados)){
                 throw new Exception('Parâmetros inválidos para a função getNegotiation');
@@ -28,7 +28,8 @@ class NegotiationRepository{
             $requisicao = array(
                 'tabela' => 'negociacao',
                 'acao' => 'pesquisar',
-                'dados' => $dados
+                'dados' => $dados,
+                'limit' => $limit
             );
     
             $retorno = $this->conexao->requisitar($requisicao);

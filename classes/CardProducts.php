@@ -52,7 +52,7 @@ class CardProducts extends Card{
                     $porcPromocao = $registros->porcentagem_promocao;
                     $valorSemDesconto = isset($registros->valor) ? 'R$ '.number_format((($registros->valor/100*$porcPromocao)+$registros->valor), 2, ',', '.') : '';
                     $array[] = "<div class='col'>"
-                                ."<div class='card shadow-sm card-max' style='cursor:pointer;' $onclick>"
+                                ."<div class='card shadow-sm card-max rounded-3' style='cursor:pointer;' $onclick>"
                                     ."<img class='tamanho-imagem-card' src='$imagem'>"
                                     ."<div class='card-footer text-muted'>"
                                         ."<p class='card-text'>$nome</p>"
