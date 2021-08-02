@@ -23,7 +23,7 @@
     <div class='album py-5 bg-index'>
         <div class='container'>
         <h4 class='text-center card-titulo'>Parceiros de Negócios</h4>
-            <div class='row row-cols-1 row-cols-sm-2 row-cols-lg-2 g-2'>
+            <div class='row row-cols-1 row-cols-sm-1 row-cols-lg-2 g-2'>
                 <div class='col'>
                     <div class='card shadow-sm'>
                         <canvas id="vendedores" width="400" height="400"></canvas>
@@ -44,7 +44,7 @@
                 </div>
             </div><br><br>
             <h4 class='text-center card-titulo'>Vendas</h4>
-            <div class='row row-cols-1 row-cols-sm-2 row-cols-lg-2 g-2'>
+            <div class='row row-cols-1 row-cols-sm-1 row-cols-lg-2 g-2'>
                 <div class='col'>
                     <div class='card shadow-sm'>
                         <canvas id="vendasMensais" width="400" height="400"></canvas>
@@ -65,7 +65,7 @@
                 </div>
             </div><br><br>
             <h4 class='text-center card-titulo'>Produtos</h4>
-            <div class='row row-cols-1 row-cols-sm-2 row-cols-lg-2 g-2'>
+            <div class='row row-cols-1 row-cols-sm-1 row-cols-lg-2 g-2'>
                 <div class='col'>
                     <div class='card shadow-sm'>
                         <canvas id="gruposProdutos" width="400" height="400"></canvas>
