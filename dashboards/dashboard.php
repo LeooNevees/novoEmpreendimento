@@ -217,7 +217,7 @@
 
             var vendasMensais = {
                 label: 'Vendas Mensais',
-                borderColor: '#87CEFA',
+                borderColor: '#3CB371',
                 backgroundColor: 'transparent',
                 data: newData
             };
@@ -244,7 +244,7 @@
 
             var vendasDiarias = {
                 label: 'Vendas Diárias',
-                borderColor: '#87CEFA',
+                borderColor: '#3CB371',
                 backgroundColor: 'transparent',
                 data: newDay
             };
