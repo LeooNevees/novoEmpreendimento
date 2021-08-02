@@ -135,7 +135,7 @@ try {
         $classeProduto = new ProductsRepository;
         $retProd = json_decode($classeProduto->getProductLimit(['status' => 'ATIVO'], 1000));
         foreach ($retProd as $produto) {
-            $newGrupos[$produto->grupo]['quantidade'] = $newGrupos[$produto->grupo]['quantidade'] + 1;
+            $newGrupos[$produto->grupo]['quantidade'] = $newGrupos[$produto->grupo]['quantidade'] + $produto->quantidade_vendida;
         }
         return $newGrupos;
     }

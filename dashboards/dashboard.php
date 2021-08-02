@@ -22,6 +22,27 @@
     ?>
     <div class='album py-5 bg-index'>
         <div class='container'>
+        <h4 class='text-center card-titulo'>Parceiros de Negócios</h4>
+            <div class='row row-cols-1 row-cols-sm-2 row-cols-lg-2 g-2'>
+                <div class='col'>
+                    <div class='card shadow-sm'>
+                        <canvas id="vendedores" width="400" height="400"></canvas>
+                        <div class='card-footer text-muted'>
+                            <p class='color-vermelho text-center'>Vendedores</p>
+                            <p class='card-text text-center'>Vendedores mais ativos</p>
+                        </div>
+                    </div>
+                </div>
+                <div class='col'>
+                    <div class='card shadow-sm'>
+                        <canvas id="compradores" width="400" height="400"></canvas>
+                        <div class='card-footer text-muted'>
+                            <p class='color-vermelho text-center'>Compradores</p>
+                            <p class='card-text text-center'>Compradores mais ativos</p>
+                        </div>
+                    </div>
+                </div>
+            </div><br><br>
             <h4 class='text-center card-titulo'>Vendas</h4>
             <div class='row row-cols-1 row-cols-sm-2 row-cols-lg-2 g-2'>
                 <div class='col'>
@@ -39,27 +60,6 @@
                         <div class='card-footer text-muted'>
                             <p class='color-vermelho text-center'>Vendas Diárias</p>
                             <p class='card-text text-center'>Total de vendas realizadas durante os dias do mês atual</p>
-                        </div>
-                    </div>
-                </div>
-            </div><br><br>
-            <h4 class='text-center card-titulo'>Parceiros de Negócios</h4>
-            <div class='row row-cols-1 row-cols-sm-2 row-cols-lg-2 g-2'>
-                <div class='col'>
-                    <div class='card shadow-sm'>
-                        <canvas id="vendedores" width="400" height="400"></canvas>
-                        <div class='card-footer text-muted'>
-                            <p class='color-vermelho text-center'>Vendedores</p>
-                            <p class='card-text text-center'>Vendedores mais ativos</p>
-                        </div>
-                    </div>
-                </div>
-                <div class='col'>
-                    <div class='card shadow-sm'>
-                        <canvas id="compradores" width="400" height="400"></canvas>
-                        <div class='card-footer text-muted'>
-                            <p class='color-vermelho text-center'>Compradores</p>
-                            <p class='card-text text-center'>Compradores mais ativos</p>
                         </div>
                     </div>
                 </div>
@@ -113,15 +113,92 @@
                         return false;
                     }
                     //ENVIO DOS DADOS PARA LOCALSTORAGE
-                    vendasMensaisDashboard(resposta);
-                    vendasDiariasDashboard(resposta);
                     vendedoresMaisAtivos(resposta);
                     compradoresMaisAtivos(resposta);
+                    vendasMensaisDashboard(resposta);
+                    vendasDiariasDashboard(resposta);
                     grupoAtivos(resposta);
                     produtosMaisVendidos(resposta);
+                    
                     return true;
                 }
             })
+        }
+
+        function vendedoresMaisAtivos(resposta) {
+            if(resposta == ''){
+                alert('Erro ao carregar Vendedores Mais Ativos');
+                return false;
+            }
+            let newNomeVendedor = [];
+            let newQuantidadeVendedor = [];
+            var vendedorObj = Object.keys(resposta.top_vendedor);
+            for (let b = 0; b < 5; b++) {
+                newNomeVendedor[b] = 'Anônimo';
+                newQuantidadeVendedor[b] = 0;
+                
+                if(typeof resposta.top_vendedor[vendedorObj[b]] != "undefined"){
+                    newNomeVendedor[b] = resposta.top_vendedor[vendedorObj[b]]['nome_parceiro']; 
+                    newQuantidadeVendedor[b] = resposta.top_vendedor[vendedorObj[b]]['quantidade']; 
+                }
+            }
+
+            var vendedores = {
+                label: 'Vendedores',
+                borderColor: '#F5FFFA',
+                backgroundColor: [
+                    'rgb(128,0,0)',
+                    'rgb(205,92,92)',
+                    'rgb(240,128,128)',
+                    'rgb(255,182,193)',
+                    'rgb(201, 203, 207)'
+                ],
+                data: newQuantidadeVendedor
+            };
+
+            localStorage.setItem('nome_vendedores_ativos', JSON.stringify(newNomeVendedor));
+            localStorage.setItem('quantidade_vendedores_ativos', JSON.stringify(vendedores));
+
+            return true;
+
+        }
+
+        function compradoresMaisAtivos(resposta) {
+            if(resposta == ''){
+                alert('Erro ao carregar Compradores Mais Ativos');
+                return false;
+            }
+            let newNomeComprador = [];
+            let newQuantidadeComprador = [];
+            var compradorObj = Object.keys(resposta.top_comprador);
+            for (let c = 0; c < 5; c++) {
+                newNomeComprador[c] = 'Anônimo';
+                newQuantidadeComprador[c] = 0;
+                
+                if(typeof resposta.top_comprador[compradorObj[c]] != "undefined"){
+                    newNomeComprador[c] = resposta.top_comprador[compradorObj[c]]['nome_parceiro']; 
+                    newQuantidadeComprador[c] = resposta.top_comprador[compradorObj[c]]['quantidade']; 
+                }
+            }
+
+            var compradores = {
+                label: 'Compradores',
+                borderColor: '#F5FFFA',
+                backgroundColor: [
+                    'rgb(0,0,205)',
+                    'rgb(65,105,225)',
+                    'rgb(30,144,255)',
+                    'rgb(135,206,250)',
+                    'rgb(201, 203, 207)'
+                ],
+                data: newQuantidadeComprador
+            };
+
+            localStorage.setItem('nome_compradores_ativos', JSON.stringify(newNomeComprador));
+            localStorage.setItem('quantidade_compradores_ativos', JSON.stringify(compradores));
+
+            return true;
+
         }
 
         function vendasMensaisDashboard(resposta) {
@@ -178,82 +255,6 @@
             return true;
         }
 
-        function vendedoresMaisAtivos(resposta) {
-            if(resposta == ''){
-                alert('Erro ao carregar Vendedores Mais Ativos');
-                return false;
-            }
-            let newNomeVendedor = [];
-            let newQuantidadeVendedor = [];
-            var vendedorObj = Object.keys(resposta.top_vendedor);
-            for (let b = 0; b < 5; b++) {
-                newNomeVendedor[b] = 'Anônimo';
-                newQuantidadeVendedor[b] = 0;
-                
-                if(typeof resposta.top_vendedor[vendedorObj[b]] != "undefined"){
-                    newNomeVendedor[b] = resposta.top_vendedor[vendedorObj[b]]['nome_parceiro']; 
-                    newQuantidadeVendedor[b] = resposta.top_vendedor[vendedorObj[b]]['quantidade']; 
-                }
-            }
-
-            var vendedores = {
-                label: 'Vendedores',
-                borderColor: '#87CEFA',
-                backgroundColor: [
-                    'rgb(255, 99, 132)',
-                    'rgb(75, 192, 192)',
-                    'rgb(255, 205, 86)',
-                    'rgb(201, 203, 207)',
-                    'rgb(54, 162, 235)'
-                ],
-                data: newQuantidadeVendedor
-            };
-
-            localStorage.setItem('nome_vendedores_ativos', JSON.stringify(newNomeVendedor));
-            localStorage.setItem('quantidade_vendedores_ativos', JSON.stringify(vendedores));
-
-            return true;
-
-        }
-
-        function compradoresMaisAtivos(resposta) {
-            if(resposta == ''){
-                alert('Erro ao carregar Compradores Mais Ativos');
-                return false;
-            }
-            let newNomeComprador = [];
-            let newQuantidadeComprador = [];
-            var compradorObj = Object.keys(resposta.top_comprador);
-            for (let c = 0; c < 5; c++) {
-                newNomeComprador[c] = 'Anônimo';
-                newQuantidadeComprador[c] = 0;
-                
-                if(typeof resposta.top_comprador[compradorObj[c]] != "undefined"){
-                    newNomeComprador[c] = resposta.top_comprador[compradorObj[c]]['nome_parceiro']; 
-                    newQuantidadeComprador[c] = resposta.top_comprador[compradorObj[c]]['quantidade']; 
-                }
-            }
-
-            var compradores = {
-                label: 'Compradores',
-                borderColor: '#87CEFA',
-                backgroundColor: [
-                    'rgb(0,255,255)',
-                    'rgb(0,100,0)',
-                    'rgb(210,105,30)',
-                    'rgb(75,0,130)',
-                    'rgb(128,0,0)'
-                ],
-                data: newQuantidadeComprador
-            };
-
-            localStorage.setItem('nome_compradores_ativos', JSON.stringify(newNomeComprador));
-            localStorage.setItem('quantidade_compradores_ativos', JSON.stringify(compradores));
-
-            return true;
-
-        }
-
         function grupoAtivos(resposta) {
             if(resposta == ''){
                 alert('Erro ao carregar Grupos');
@@ -274,13 +275,13 @@
 
             var grupos = {
                 label: 'Grupos',
-                borderColor: '#87CEFA',
+                borderColor: '#F5FFFA',
                 backgroundColor: [
-                    'rgb(0,255,255)',
-                    'rgb(0,100,0)',
-                    'rgb(210,105,30)',
-                    'rgb(75,0,130)',
-                    'rgb(128,0,0)'
+                'rgb(255, 99, 132)',
+                'rgb(135,206,250)',
+                'rgb(30,144,255)',
+                'rgb(255,182,193)',
+                'rgb(72,209,204)'
                 ],
                 hoverOffset: 4,
                 data: newQuantidadeGrupo
@@ -313,18 +314,18 @@
             var produtos = {
                 label: 'Produtos',
                 backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(255, 159, 64, 0.2)',
-                'rgba(255, 205, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(54, 162, 235, 0.2)'
+                'rgba(30,144,255, 0.5)',
+                'rgba(255,182,193, 0.5)',
+                'rgba(135,206,250, 0.5)',
+                'rgba(255, 99, 132, 0.5)',
+                'rgba(72,209,204, 0.5)'
                 ],
                 borderColor: [
+                'rgb(30,144,255)',
+                'rgb(255,182,193)',
+                'rgb(135,206,250)',
                 'rgb(255, 99, 132)',
-                'rgb(255, 159, 64)',
-                'rgb(255, 205, 86)',
-                'rgb(75, 192, 192)',
-                'rgb(54, 162, 235)'
+                'rgb(72,209,204)'
                 ],
                 borderWidth: 1,
                 data: newQuantidadeProdutoVendido
@@ -356,14 +357,6 @@
         
         Promise.all([buscarVendas()])
             .then(function (values) {
-                var getMeses = JSON.parse(localStorage.getItem('meses_dashboard'));
-                var getVendasMensais = JSON.parse(localStorage.getItem('vendas_mensais_dashboard'));
-                chart('vendasMensais', 'line', objectToArray(getMeses), getVendasMensais);
-
-                var getDia = JSON.parse(localStorage.getItem('dias_dashboard'));
-                var getVendasDiarias = JSON.parse(localStorage.getItem('vendas_diarias_dashboard'));
-                chart('vendasDiarias', 'line', objectToArray(getDia), getVendasDiarias);
-
                 var getNomeVendedores = JSON.parse(localStorage.getItem('nome_vendedores_ativos'));
                 var getQuantidadeVendedores = JSON.parse(localStorage.getItem('quantidade_vendedores_ativos'));
                 chart('vendedores', 'polarArea', objectToArray(getNomeVendedores), getQuantidadeVendedores);
@@ -372,29 +365,25 @@
                 var getQuantidadeCompradores = JSON.parse(localStorage.getItem('quantidade_compradores_ativos'));
                 chart('compradores', 'polarArea', objectToArray(getNomeCompradores), getQuantidadeCompradores);
 
+                var getMeses = JSON.parse(localStorage.getItem('meses_dashboard'));
+                var getVendasMensais = JSON.parse(localStorage.getItem('vendas_mensais_dashboard'));
+                chart('vendasMensais', 'line', objectToArray(getMeses), getVendasMensais);
+
+                var getDia = JSON.parse(localStorage.getItem('dias_dashboard'));
+                var getVendasDiarias = JSON.parse(localStorage.getItem('vendas_diarias_dashboard'));
+                chart('vendasDiarias', 'line', objectToArray(getDia), getVendasDiarias);
+
                 var getNomeGrupos = JSON.parse(localStorage.getItem('nome_grupos_ativos'));
                 var getProdutosGrupos = JSON.parse(localStorage.getItem('quantidade_produtos_grupos'));
                 chart('gruposProdutos', 'doughnut', objectToArray(getNomeGrupos), getProdutosGrupos);
 
                 var getNomeProdutos = JSON.parse(localStorage.getItem('nome_produtos'));
                 var getQuantidadeProdutos = JSON.parse(localStorage.getItem('quantidade_produtos'));
-                chart('produtos', 'bar', objectToArray(getNomeProdutos), getQuantidadeProdutos);
+                chart('produtos', 'bar', getNomeProdutos, getQuantidadeProdutos);
             });
     </script>
 
     <!-- <script>
-        // var teste = {
-        //     label: 'Vendas',
-        //     borderColor: '#87CEFA',
-        //     backgroundColor: 'transparent',
-        //     data: [0,1,2,3,2,3,4,5]
-        // };
-        // chart('myChart', 'line', getMeses, getVendas);
-
-        var meses = buscarMeses();
-        var vendas = buscarVendas();
-
-        console.log('Iniciando preenchimento do dashboard');
         var ctx = document.getElementById('myChart');
         var myChart = new Chart(ctx, {
             type: 'line',
