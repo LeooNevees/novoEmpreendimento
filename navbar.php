@@ -10,7 +10,7 @@ include_once '/var/www/html/novoEmpreendimento/classes/Login.php';
     <div class="container">
         <a class="navbar-brand ml-auto" href="/novoEmpreendimento/index.php"><img src="/novoEmpreendimento/img/iconePeca.png" style="width: 120px; height: 50px;"></a>
         <div class="input-group mb-1 mr-3 ml-1" style="width: 60%; margin-top: 1%;">
-            <input type="text" class="form-control" placeholder="Buscar peça" aria-label="Recipient's username" aria-describedby="button-addon2" id="buscar" name="buscar">
+            <input type="text" class="form-control" placeholder="Buscar Peça ou Parceiro de Negócio" aria-label="Recipient's username" aria-describedby="button-addon2" id="buscar" name="buscar">
             <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="searchProdutcBusiness()"><i class="fa fa-search"></i></button>
         </div>
 

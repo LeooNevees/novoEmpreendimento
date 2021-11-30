@@ -178,7 +178,7 @@ class SingleProduct{
 								."$divValores"
 								."<div>"
 									."<i class='fas fa-truck'></i>"
-									."<span> Entrega prevista para <font><b>$dataEntrega<b></font></span><br>"
+									."<span> Entrega prevista para <font><b>Quinta-Feira 2 de Dezembro<b></font></span><br>"
 								."</div><br>"
 								."<div>"
 									."<label>Cor: <font><b>$cor</b></font></label>"
